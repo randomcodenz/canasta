@@ -12,6 +12,7 @@ Cards are scored as follows:
 * A, 2 : 20 points each
 * K-8 : 10 points each
 * 7-4 : 5 points each
+* Black 3 : 5 points each
 
 A-4 are known as natural cards.
 Jokers and 2s are known as wild cards.

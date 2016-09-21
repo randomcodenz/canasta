@@ -12,6 +12,7 @@ AllCops:
     - 'lib/tasks/cucumber.rake'
     - 'script/cucumber'
     - 'spec/spec_helper.rb'
+    - 'db/schema.rb'
 
 Documentation:
   Enabled: false

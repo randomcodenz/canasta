@@ -11,3 +11,14 @@ Feature: Deal a hand of canasta
     Given I am on the home page
     When I start a new game
     Then the new game is displayed
+
+  Scenario: Simple game should have 2 players
+    Given I have started a simple game
+    When I view the game
+    Then I should see 2 players
+
+  Scenario: Start a new round
+    Given I have started a simple game
+    And I am viewing the game
+    When I start a new round
+    Then the new round is displayed

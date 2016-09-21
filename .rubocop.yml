@@ -19,3 +19,6 @@ Documentation:
 
 Style/HashSyntax:
     EnforcedStyle: hash_rockets
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation

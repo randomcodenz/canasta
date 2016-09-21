@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 describe GamesController, :type => :controller do
-  describe '#index' do
+  describe 'GET #index' do
     before { get :index }
 
     it { is_expected.to render_template('index') }
   end
 
-  describe '#show' do
+  describe 'GET #show' do
     before do
       @game = Game.new
       @game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
@@ -22,7 +22,7 @@ describe GamesController, :type => :controller do
     end
   end
 
-  describe '#create' do
+  describe 'POST #create' do
     it 'creates a new game' do
       expect { post :create }.to change(Game, :count).by(1)
     end

@@ -41,6 +41,6 @@ Then(/^I should see (\d+) players$/) do |player_count|
 end
 
 Then(/^the new round is displayed$/) do
-  expect(page.current_path)
-    .to eq "/games/#{Game.last.id}/round/#{Round.last.id}"
+  expect(page.current_path).to eq "/games/#{Game.last.id}"
+  expect(find('p#round_number').text).to eq 'Round 1'
 end

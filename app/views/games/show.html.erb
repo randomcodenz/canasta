@@ -1,1 +1,10 @@
 <%= render @game.players %>
+<% if @game.rounds.any? %>
+  <p id="round_number">Round <%= @game.rounds.count %></p>
+<% else %>
+  <%= form_for :round, :url => game_rounds_path(@game) do |f| %>
+    <p>
+      <%= f.submit('Start round') %>
+    </p>
+  <% end %>
+<% end %>

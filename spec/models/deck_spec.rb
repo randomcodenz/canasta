@@ -33,6 +33,7 @@ describe Deck do
     subject(:shuffled_cards) { Deck.shuffled_cards(seed) }
 
     it 'shuffled cards are not in the default cards order' do
+      expect(shuffled_cards).to match_array(Deck.cards)
       expect(shuffled_cards).not_to eq Deck.cards
     end
 

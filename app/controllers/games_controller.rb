@@ -9,8 +9,9 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.new
-    @game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
+    @game = Game.new do |game|
+      game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
+    end
     @game.save!
     redirect_to @game
   end

@@ -26,4 +26,22 @@ describe Deck do
         .to have_attributes(:count => 13)
     end
   end
+
+  describe '#shuffled_cards' do
+    let(:seed) { nil }
+
+    subject(:shuffled_cards) { Deck.shuffled_cards(seed) }
+
+    it 'shuffled cards are not in the default cards order' do
+      expect(shuffled_cards).not_to eq Deck.cards
+    end
+
+    context 'with a given seed' do
+      let(:seed) { 10 }
+
+      it 'shuffled_cards always shuffle in the same order' do
+        expect(shuffled_cards).to eq Deck.shuffled_cards(seed)
+      end
+    end
+  end
 end

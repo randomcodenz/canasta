@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class Deck
   class << self
     def cards

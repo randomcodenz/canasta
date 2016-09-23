@@ -1,4 +1,7 @@
 class Dealer
+  PLAYERS = 2
+  CARDS_PER_PLAYER = 15
+
   class << self
     def deal(shuffled_cards)
       player_hands = player_hands(shuffled_cards)
@@ -16,7 +19,7 @@ class Dealer
     private
 
     def player_hands(shuffled_cards)
-      Array.new(15) { |index| shuffled_cards.slice(index * 2, 2) }.transpose
+      Array.new(CARDS_PER_PLAYER) { |index| shuffled_cards.slice(index * PLAYERS, PLAYERS) }.transpose
     end
 
     def discard_pile(shuffled_cards)

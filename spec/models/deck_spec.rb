@@ -17,13 +17,11 @@ describe Deck do
     end
 
     it 'contains 8 cards of each standard rank' do
-      expect(standard_ranks.group_by { |rank| rank }.values)
-        .to all have_attributes(:count => 8)
+      expect(standard_ranks.group_by { |rank| rank }.values).to all have_attributes(:count => 8)
     end
 
     it 'contains all of the standard ranks' do
-      expect(standard_ranks.group_by { |rank| rank }.keys)
-        .to have_attributes(:count => 13)
+      expect(standard_ranks.group_by { |rank| rank }.keys).to have_attributes(:count => 13)
     end
   end
 

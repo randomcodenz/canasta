@@ -13,10 +13,8 @@ describe Dealer do
       end
 
       it 'the player hands are dealt in a round-robin manner' do
-        expect(deal.player_hands.flatten)
-          .to match_array(shuffled_cards.take(30))
-        expect(deal.player_hands)
-          .not_to eq shuffled_cards.take(30)
+        expect(deal.player_hands.flatten).to match_array(shuffled_cards.take(30))
+        expect(deal.player_hands).not_to eq shuffled_cards.take(30)
       end
 
       it 'creates the discard pile' do

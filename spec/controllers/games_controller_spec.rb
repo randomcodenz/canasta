@@ -29,8 +29,7 @@ describe GamesController, :type => :controller do
 
     it 'creates 2 default players for the new game' do
       post :create
-      expect(Game.last.players.collect(&:name))
-        .to contain_exactly('Player 1', 'Player 2')
+      expect(Game.last.players.collect(&:name)).to contain_exactly('Player 1', 'Player 2')
     end
 
     it 'redirects to the new game' do

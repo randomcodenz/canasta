@@ -2,14 +2,20 @@ require 'rails_helper'
 
 describe Card do
   describe '#<=>' do
+    def queen_of_hearts
+      Card.new(:suit => :hearts, :rank => :queen)
+    end
+
+    def joker
+      Card.new(:rank => :joker)
+    end
+
     it 'cards of the same rank and suit are equal' do
-      expect(Card.new(:suit => :hearts, :rank => :queen))
-        .to eq Card.new(:suit => :hearts, :rank => :queen)
+      expect(queen_of_hearts).to eq queen_of_hearts
     end
 
     it 'jokers are equal' do
-      expect(Card.new(:rank => :joker))
-        .to eq Card.new(:rank => :joker)
+      expect(joker).to eq joker
     end
 
     context 'when comparing cards of the same rank' do
@@ -29,14 +35,22 @@ describe Card do
       let(:cards) do
         Card::RANKS.map do |rank|
           Card.new(:suit => :diamonds, :rank => rank)
-        end | [Card.new(:rank => Card::JOKER)]
+        end
       end
 
       # Array#sort uses <=> for comparison
       subject(:sorted_cards) { cards.to_a.sort }
 
-      it 'cards are sorted by rank from ace..two then joker' do
-        expect(sorted_cards.map(&:rank)).to eq Card::RANKS | [Card::JOKER]
+      it 'cards are sorted by rank from ace..two' do
+        expect(sorted_cards.map(&:rank)).to eq Card::RANKS
+      end
+    end
+
+    context 'when comparing jokers to anything' do
+      subject(:sorted_cards) { Deck.cards.to_a.sort }
+
+      it 'jokers are always the lowest card' do
+        expect(sorted_cards.last(4)).to eq [joker, joker, joker, joker]
       end
     end
   end

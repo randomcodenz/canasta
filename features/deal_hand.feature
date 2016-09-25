@@ -12,13 +12,19 @@ Feature: Deal a hand of canasta
     When I start a new game
     Then the new game is displayed
 
-  Scenario: Simple game should have 2 players
-    Given I have started a simple game
+  Scenario: Start a game with 2 players
+    Given I have started a game with 2 players
     When I view the game
     Then I should see 2 players
 
   Scenario: Start a new round
-    Given I have started a simple game
+    Given I have started a game with 2 players
     And I am viewing the game
     When I start a new round
-    Then the new round is displayed
+    Then I can see Round 1
+
+  Scenario: Display players hands
+    Given I have started a game with 2 players
+    And I have started a round
+    When I view the game
+    Then I should see 2 players cards

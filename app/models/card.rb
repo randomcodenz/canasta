@@ -9,9 +9,9 @@ class Card
   include Comparable
   attr_reader :suit, :rank
 
-  def initialize(args = {})
-    @suit = args[:suit] || :none
-    @rank = args.fetch(:rank)
+  def initialize(rank:, suit: :none)
+    @rank = rank
+    @suit = suit
   end
 
   def <=>(other)

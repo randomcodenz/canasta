@@ -3,9 +3,9 @@ class Dealer
 
   attr_reader :deck, :number_of_players
 
-  def initialize(args = {})
-    @deck = args.fetch(:deck)
-    @number_of_players = args.fetch(:number_of_players)
+  def initialize(deck:, number_of_players:)
+    @deck = deck
+    @number_of_players = number_of_players
   end
 
   def deal

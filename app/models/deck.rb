@@ -1,8 +1,8 @@
 class Deck
   attr_reader :seed
 
-  def initialize(args = {})
-    @seed = args[:seed] || Random.new_seed
+  def initialize(seed: Random.new_seed)
+    @seed = seed
   end
 
   def cards

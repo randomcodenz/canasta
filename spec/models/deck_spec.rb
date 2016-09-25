@@ -26,7 +26,7 @@ describe Deck do
   end
 
   describe '#shuffled_cards' do
-    let(:seed) { nil }
+    let(:seed) { Random.new_seed }
     let(:deck) { Deck.new(:seed => seed) }
 
     subject(:shuffled_cards) { deck.shuffled_cards }

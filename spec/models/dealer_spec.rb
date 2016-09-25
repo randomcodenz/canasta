@@ -2,12 +2,15 @@ require 'rails_helper'
 
 describe Dealer do
   describe '#deal' do
-    let(:seed) { 969 }
-    let(:shuffled_cards) { Deck.shuffled_cards(seed) }
+    let(:deck) { Deck.new(:seed => 969) }
+    let(:shuffled_cards) { deck.shuffled_cards }
+    let(:dealer) { Dealer.new(:deck => deck, :number_of_players => player_count) }
 
-    subject(:deal) { Dealer.deal(shuffled_cards) }
+    subject(:deal) { dealer.deal }
 
     context 'when dealing a 2 player game' do
+      let(:player_count) { 2 }
+
       it 'deals 15 cards to each player' do
         expect(deal.player_hands.map(&:count)).to all eq 15
       end

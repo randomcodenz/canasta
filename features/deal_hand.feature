@@ -28,3 +28,4 @@ Feature: Deal a hand of canasta
     And I have started a round
     When I view the game
     Then I should see 2 players cards
+    And I should see 15 cards per player

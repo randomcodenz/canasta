@@ -6,7 +6,7 @@ describe Deck do
     let(:jokers) { ranks.select { |rank| rank == :joker } }
     let(:standard_ranks) { ranks - jokers }
 
-    subject(:cards) { Deck.cards }
+    subject(:cards) { Deck.new.cards }
 
     it 'returns 108 cards' do
       expect(cards).to have_attributes(:count => 108)
@@ -27,19 +27,20 @@ describe Deck do
 
   describe '#shuffled_cards' do
     let(:seed) { nil }
+    let(:deck) { Deck.new(:seed => seed) }
 
-    subject(:shuffled_cards) { Deck.shuffled_cards(seed) }
+    subject(:shuffled_cards) { deck.shuffled_cards }
 
     it 'shuffled cards are not in the default cards order' do
-      expect(shuffled_cards).to match_array(Deck.cards)
-      expect(shuffled_cards).not_to eq Deck.cards
+      expect(shuffled_cards).to match_array(deck.cards)
+      expect(shuffled_cards).not_to eq deck.cards
     end
 
     context 'with a given seed' do
       let(:seed) { 10 }
 
       it 'shuffled_cards always shuffle in the same order' do
-        expect(shuffled_cards).to eq Deck.shuffled_cards(seed)
+        expect(shuffled_cards).to eq deck.shuffled_cards
       end
     end
   end

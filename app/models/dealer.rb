@@ -1,31 +1,46 @@
 class Dealer
-  PLAYERS = 2
-  CARDS_PER_PLAYER = 15
+  CARDS_PER_PLAYER = { 2 => 15 }.freeze
 
-  class << self
-    def deal(shuffled_cards)
-      player_hands = player_hands(shuffled_cards, CARDS_PER_PLAYER, PLAYERS)
-      shuffled_cards -= player_hands.flatten
-      discard_pile = discard_pile(shuffled_cards)
-      stock = shuffled_cards - discard_pile
+  attr_reader :deck, :number_of_players
 
-      OpenStruct.new(
-        :player_hands => player_hands,
-        :discard_pile => discard_pile,
-        :stock => stock
-      )
-    end
+  def initialize(args = {})
+    @deck = args.fetch(:deck)
+    @number_of_players = args.fetch(:number_of_players)
+  end
 
-    private
+  def deal
+    shuffled_cards = deck.shuffled_cards
+    cards_per_player = CARDS_PER_PLAYER[number_of_players]
 
-    def player_hands(shuffled_cards, cards_per_player, number_players)
-      Array.new(cards_per_player) do |index|
-        shuffled_cards.slice(index * number_players, number_players)
-      end.transpose
-    end
+    player_hands = player_hands(shuffled_cards, cards_per_player, number_of_players)
+    discard_pile = discard_pile(player_hands.remaining_cards)
 
-    def discard_pile(shuffled_cards)
-      [shuffled_cards.first]
-    end
+    OpenStruct.new(
+      :player_hands => player_hands.player_hands,
+      :discard_pile => discard_pile.discard_pile,
+      :stock => discard_pile.remaining_cards
+    )
+  end
+
+  private
+
+  def player_hands(shuffled_cards, cards_per_player, number_players)
+    player_hands = Array.new(cards_per_player) do |index|
+      shuffled_cards.slice(index * number_players, number_players)
+    end.transpose
+
+    OpenStruct.new(
+      :player_hands => player_hands,
+      :remaining_cards => shuffled_cards - player_hands.flatten
+    )
+  end
+
+  def discard_pile(shuffled_cards)
+    discard_pile = [shuffled_cards.first]
+
+    OpenStruct.new(
+      :discard_pile => discard_pile,
+      :remaining_cards => shuffled_cards - discard_pile
+    )
   end
 end

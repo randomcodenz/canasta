@@ -47,7 +47,7 @@ describe Card do
     end
 
     context 'when comparing jokers to anything' do
-      subject(:sorted_cards) { Deck.cards.to_a.sort }
+      subject(:sorted_cards) { Deck.new.cards.to_a.sort }
 
       it 'jokers are always the lowest card' do
         expect(sorted_cards.last(4)).to eq [joker, joker, joker, joker]

@@ -23,6 +23,10 @@ Style/HashSyntax:
 Style/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
+Style/SymbolProc:
+  # Causes problems with Transform - research indicates it causes other problems as well
+  Enabled: false
+
 Metrics/LineLength:
   Max: 120
   AllowURI: true

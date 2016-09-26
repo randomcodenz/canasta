@@ -46,21 +46,21 @@ Then(/^the new game is displayed$/) do
 end
 
 Then(/^I should see (\d+) players$/) do |player_count|
-  expect(find_all('p.player').length).to eq player_count
+  expect(find_all('.player').length).to eq player_count
 end
 
 Then(/^I can see Round (\d+)$/) do |round_number|
   expect(page.current_path).to eq "/games/#{Game.last.id}"
-  expect(find('p#round_number').text).to eq "Round #{round_number}"
+  expect(find('#round_number').text).to eq "Round #{round_number}"
 end
 
 Then(/^I should see (\d+) players cards$/) do |player_count|
-  expect(find_all('p.player .cards').length).to eq player_count
+  expect(find_all('.player .cards').length).to eq player_count
 end
 
 Then(/^I should see (\d+) cards per player$/) do |cards_per_player|
-  players_cards = find_all('p.player .cards').map do |cards|
+  player_card_counts = find_all('.player .cards').map do |cards|
     cards.find_all('.card').length
   end
-  expect(players_cards).to all(have_attributes(:count => cards_per_player))
+  expect(player_card_counts).to all_the_things(eq cards_per_player)
 end

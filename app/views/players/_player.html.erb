@@ -1,1 +1,8 @@
-<p class="player"><%= player.name %></p>
+<div class="player">
+  <%= player.name %>
+  <ul class="cards">
+    <% player.cards.each do |card| %>
+      <li class="card"><%= card.rank %> of <%= card.suit %></li>
+    <% end %>
+  </ul>
+</div>

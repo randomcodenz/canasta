@@ -20,6 +20,10 @@ describe GamesController, :type => :controller do
     it 'assigns the requested game to @game' do
       expect(assigns(:game)).to eq Game.last
     end
+
+    it 'wraps the requested game in a game presenter' do
+      expect(assigns(:game)).to be_an_instance_of GamePresenter
+    end
   end
 
   describe 'POST #create' do

@@ -5,7 +5,8 @@ class GamesController < ApplicationController
   end
 
   def show
-    @game = Game.includes(:players).find(params[:id])
+    game = Game.includes(:players).find(params[:id])
+    @game = GamePresenter.new(:game => game, :game_state => deal(game))
   end
 
   def create
@@ -14,5 +15,16 @@ class GamesController < ApplicationController
     end
     @game.save!
     redirect_to @game
+  end
+
+  private
+
+  def deal(game)
+    current_round = game.rounds.last
+    if current_round
+      deck = Deck.new(:seed => current_round.deck_seed)
+      dealer = Dealer.new(:deck => deck, :number_of_players => game.players.count)
+      dealer.deal
+    end
   end
 end

@@ -24,6 +24,9 @@ Style/HashSyntax:
 Style/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented_relative_to_receiver
+
 Style/SymbolProc:
   # Causes problems with Transform - research indicates it causes other problems as well
   Enabled: false

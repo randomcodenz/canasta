@@ -1,0 +1,4 @@
+<p id="round_number">Round <%= @game.current_round_number %></p>
+<%= render @game.players %>
+<p id="stock">Stock (<%= describe_pile_size @game.stock_size %>)</p>
+<p id="discard_pile"><%= @game.discard_pile_top_card %> (<%= describe_pile_size @game.discard_pile_size %>)</p>

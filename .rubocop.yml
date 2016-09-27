@@ -12,9 +12,25 @@ AllCops:
     - 'lib/tasks/cucumber.rake'
     - 'script/cucumber'
     - 'spec/spec_helper.rb'
+    - 'db/schema.rb'
+  TargetRubyVersion: 2.1
 
 Documentation:
   Enabled: false
 
 Style/HashSyntax:
     EnforcedStyle: hash_rockets
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented_relative_to_receiver
+
+Style/SymbolProc:
+  # Causes problems with Transform - research indicates it causes other problems as well
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+  AllowURI: true

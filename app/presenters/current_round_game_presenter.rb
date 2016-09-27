@@ -16,6 +16,10 @@ class CurrentRoundGamePresenter < SimpleDelegator
     game_state.discard_pile.size
   end
 
+  def stock_size
+    game_state.stock.size
+  end
+
   def players
     super.sort_by(&:id)
       .zip(game_state.player_hands)

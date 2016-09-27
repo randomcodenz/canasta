@@ -49,4 +49,10 @@ describe CurrentRoundGamePresenter do
       expect(presenter.discard_pile_size).to eq 1
     end
   end
+
+  describe '#stock_size' do
+    it 'returns the number of cards in the stock' do
+      expect(presenter.stock_size).to eq 77
+    end
+  end
 end

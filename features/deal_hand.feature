@@ -36,3 +36,10 @@ Feature: Deal a hand of canasta
     When I view the round
     Then I should see the top card of the discard pile
     And I should see the discard pile contains 1 card
+
+  Scenario: Display discard pile
+    Given I have started a game with 2 players
+    And I have started a round
+    When I view the round
+    Then I should see the stock
+    And I should see the stock contains 77 cards

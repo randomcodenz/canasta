@@ -8,9 +8,9 @@ end
 
 Given(/^I have started a game with (\d+) players$/) do |player_count|
   players = Array.new(player_count) { |index| { :name => "Player #{index}" } }
-  @game = Game.new
-  @game.players.new(players)
-  @game.save!
+  Game.create! do |game|
+    game.players.new(players)
+  end
 end
 
 Given(/^I have started a round$/) do
@@ -33,6 +33,10 @@ When(/^I view the game$/) do
   visit game_path(Game.last)
 end
 
+When(/^I view the round$/) do
+  visit game_round_path(Game.last, Round.last)
+end
+
 When(/^I start a new round$/) do
   click_button('Start round')
 end
@@ -50,7 +54,7 @@ Then(/^I should see (\d+) players$/) do |player_count|
 end
 
 Then(/^I can see Round (\d+)$/) do |round_number|
-  expect(page.current_path).to eq "/games/#{Game.last.id}"
+  expect(page.current_path).to eq "/games/#{Game.last.id}/rounds/#{Round.last.id}"
   expect(find('#round_number').text).to eq "Round #{round_number}"
 end
 

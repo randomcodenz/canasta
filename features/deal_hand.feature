@@ -26,6 +26,6 @@ Feature: Deal a hand of canasta
   Scenario: Display players hands
     Given I have started a game with 2 players
     And I have started a round
-    When I view the game
+    When I view the round
     Then I should see 2 players cards
     And I should see 15 cards per player

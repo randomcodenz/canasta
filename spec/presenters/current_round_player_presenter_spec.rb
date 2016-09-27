@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-describe PlayerPresenter do
+describe CurrentRoundPlayerPresenter do
   let(:game) { Game.create! }
   let(:player1) { game.players.create!(:name => 'Player 1') }
-  let(:deck) { Deck.new(:seed => BigIntRandomSeed.new_seed) }
+  let(:deck) { Deck.new(:seed => 989) }
   let(:dealer) { Dealer.new(:deck => deck, :number_of_players => 2) }
   let(:deal) { dealer.deal }
 
-  subject(:presenter) { PlayerPresenter.new(:player => player1, :cards => deal.player_hands[0]) }
+  subject(:presenter) { CurrentRoundPlayerPresenter.new(:player => player1, :cards => deal.player_hands[0]) }
 
   it 'decorates a player' do
     expect(presenter).to eq player1

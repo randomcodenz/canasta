@@ -8,21 +8,22 @@ describe GamesController, :type => :controller do
   end
 
   describe 'GET #show' do
-    before do
-      @game = Game.new
-      @game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
-      @game.save!
-      get :show, :id => @game
+    let(:game) do
+      Game.create! do |game|
+        game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
+      end
     end
+
+    before { get :show, :id => game }
 
     it { is_expected.to render_template('show') }
 
     it 'assigns the requested game to @game' do
-      expect(assigns(:game)).to eq Game.last
+      expect(assigns(:game)).to eq game
     end
 
-    it 'wraps the requested game in a game presenter' do
-      expect(assigns(:game)).to be_an_instance_of GamePresenter
+    it 'wraps the requested game in a game summary presenter' do
+      expect(assigns(:game)).to be_an_instance_of GameSummaryPresenter
     end
   end
 

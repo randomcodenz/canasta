@@ -2,7 +2,7 @@
   <%= current_round_player.name %>
   <ul class="cards">
     <% current_round_player.cards.each do |card| %>
-      <li class="card"><%= card.rank %> of <%= card.suit %></li>
+      <li class="card"><%= card %></li>
     <% end %>
   </ul>
 </div>

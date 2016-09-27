@@ -68,3 +68,10 @@ Then(/^I should see (\d+) cards per player$/) do |cards_per_player|
   end
   expect(player_card_counts).to all_the_things(eq cards_per_player)
 end
+Then(/^I should see the top card of the discard pile$/) do
+  expect(find('#discard_pile').text).to include 'Five of Hearts'
+end
+
+Then(/^I should see the discard pile contains (\d+) card$/) do |number_cards|
+  expect(find('#discard_pile').text).to include "(#{number_cards} #{number_cards == 1 ? 'card' : 'cards'})"
+end

@@ -54,4 +54,22 @@ describe Card do
       end
     end
   end
+
+  describe '#to_s' do
+    context 'when the card has a suit and rank' do
+      subject(:card) { Card.new(:rank => :queen, :suit => :hearts) }
+
+      it 'is formatted as <Rank> of <Suit>' do
+        expect(card.to_s).to eq 'Queen of Hearts'
+      end
+    end
+
+    context 'when the card is a joker' do
+      subject(:card) { Card.new(:rank => :joker) }
+
+      it 'returns Joker' do
+        expect(card.to_s).to eq 'Joker'
+      end
+    end
+  end
 end

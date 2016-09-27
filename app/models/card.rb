@@ -22,6 +22,14 @@ class Card
       compare_joker
   end
 
+  def to_s
+    if suit == :none
+      rank.to_s.capitalize
+    else
+      "#{rank.capitalize} of #{suit.capitalize}"
+    end
+  end
+
   private
 
   def compare_identical(other)

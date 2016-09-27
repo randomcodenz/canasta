@@ -8,6 +8,14 @@ class CurrentRoundGamePresenter < SimpleDelegator
     rounds.count
   end
 
+  def discard_pile_top_card
+    game_state.discard_pile.last
+  end
+
+  def discard_pile_size
+    game_state.discard_pile.size
+  end
+
   def players
     super.sort_by(&:id)
       .zip(game_state.player_hands)

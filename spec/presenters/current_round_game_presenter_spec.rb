@@ -37,4 +37,16 @@ describe CurrentRoundGamePresenter do
       expect(presenter.players[1].cards).to eq deal.player_hands[1]
     end
   end
+
+  describe '#discard_pile_top_card' do
+    it 'returns the top card of the discard pile' do
+      expect(presenter.discard_pile_top_card).to eq deal.discard_pile.last
+    end
+  end
+
+  describe '#discard_pile_size' do
+    it 'returns the number of cards in the discard pile' do
+      expect(presenter.discard_pile_size).to eq 1
+    end
+  end
 end

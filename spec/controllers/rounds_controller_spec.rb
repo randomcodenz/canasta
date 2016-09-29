@@ -7,9 +7,8 @@ describe RoundsController, :type => :controller do
         game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
       end
     end
-    let(:game_id) { game.id }
     let(:round_id) { round.id }
-    let(:params) { { :game_id => game_id, :id => round_id } }
+    let(:params) { { :id => round_id } }
 
     before { get :show, params }
 
@@ -42,7 +41,7 @@ describe RoundsController, :type => :controller do
 
     it 'redirects to the round' do
       post :create, params
-      expect(response).to redirect_to(game_round_path(game, game.rounds.last))
+      expect(response).to redirect_to game.rounds.last
     end
   end
 end

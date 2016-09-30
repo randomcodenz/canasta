@@ -10,9 +10,8 @@ class GamesController < ApplicationController
   end
 
   def create
-    game = Game.create! do |new_game|
-      new_game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
-    end
+    create_game_service = CreateGameService.new
+    game = create_game_service.call
     redirect_to game
   end
 end

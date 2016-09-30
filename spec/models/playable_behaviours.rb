@@ -8,12 +8,12 @@ shared_examples 'a playable object' do |playable|
     expect(playable).to be_a Playable
   end
 
-  it 'responds to playable_action' do
-    expect(playable).to respond_to :playable_action
+  it 'responds to playable_actions' do
+    expect(playable).to respond_to :playable_actions
   end
 
-  it 'playable_action is a PlayableAction' do
-    playable_action = playable.playable_action
-    expect(playable_action).to be_a PlayableAction
+  it 'all playable_actions are PlayableAction instances' do
+    playable_actions = playable.playable_actions
+    expect(playable_actions).to all be_a PlayableAction
   end
 end

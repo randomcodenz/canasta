@@ -1,5 +1,5 @@
 module Playable
-  def playable_action
+  def playable_actions
     raise NotImplementedError
   end
 end

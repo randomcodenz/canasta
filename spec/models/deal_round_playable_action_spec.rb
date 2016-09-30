@@ -1,27 +1,29 @@
 require 'rails_helper'
 
-class DummyGameEngine
-  attr_reader :can_deal, :dealer, :deal_was_called
+module DealRoundPlayableActionStubs
+  class DummyGameEngine
+    attr_reader :can_deal, :dealer, :deal_was_called
 
-  def initialize(can_deal:)
-    @can_deal = can_deal
-  end
+    def initialize(can_deal:)
+      @can_deal = can_deal
+    end
 
-  def can_deal?
-    can_deal
-  end
+    def can_deal?
+      can_deal
+    end
 
-  def deal(dealer:)
-    @deal_was_called = true
-    @dealer = dealer
-    can_deal?
+    def deal(dealer:)
+      @deal_was_called = true
+      @dealer = dealer
+      can_deal?
+    end
   end
 end
 
 describe DealRoundPlayableAction do
   let(:can_deal) { true }
   let(:deck_seed) { 959 }
-  let(:game_engine) { DummyGameEngine.new(:can_deal => can_deal) }
+  let(:game_engine) { DealRoundPlayableActionStubs::DummyGameEngine.new(:can_deal => can_deal) }
 
   subject(:playable_action) { DealRoundPlayableAction.new(:deck_seed => deck_seed) }
 

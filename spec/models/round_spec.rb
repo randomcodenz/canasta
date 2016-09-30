@@ -11,4 +11,10 @@ describe Round, :type => :model do
   describe '#deck_seed' do
     it { is_expected.to validate_presence_of(:deck_seed) }
   end
+
+  describe '#playable_actions' do
+    # When a round has no player actions
+    # When a round has player actions
+    it 'returns the round action and all child player actions'
+  end
 end

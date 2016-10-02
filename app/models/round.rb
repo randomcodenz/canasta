@@ -20,6 +20,6 @@ class Round < ActiveRecord::Base
   end
 
   def player_action_playable_actions
-    rounds.order_by(:id).map { |round| round.playable_actions }.flatten
+    player_actions.order(:id).map { |player_action| player_action.playable_actions }.flatten
   end
 end

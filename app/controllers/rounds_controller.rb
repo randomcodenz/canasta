@@ -2,15 +2,19 @@ require 'bigint_random_seed'
 
 class RoundsController < ApplicationController
   def show
-    @round = Round.with_game_and_players.find(params[:id])
-    game = @round.game
-    dealt_cards = deal(game, @round)
-    @game = CurrentRoundGamePresenter.new(:game => game, :game_state => dealt_cards)
+    round = Round.with_game_and_players.find(params[:id])
+    game = round.game
+    dealt_cards = deal(game, round)
+    @game = CurrentRoundGamePresenter.new(
+      :game => game,
+      :current_round => round,
+      :game_state => dealt_cards
+    )
   end
 
   def create
-    game = Game.find(params[:game_id])
-    round = game.rounds.create!(:deck_seed => BigIntRandomSeed.new_seed)
+    service = CreateRoundService.new(:game_id => params[:game_id])
+    round = service.call
     redirect_to round
   end
 

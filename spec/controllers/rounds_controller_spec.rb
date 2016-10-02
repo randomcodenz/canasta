@@ -10,8 +10,6 @@ describe RoundsController, :type => :controller do
     let(:round_id) { round.id }
     let(:params) { { :id => round_id } }
 
-    before { get :show, params }
-
     context 'when there is a current round' do
       let(:round) { game.rounds.create!(:deck_seed => 959) }
 

@@ -4,17 +4,31 @@ describe CurrentRoundGamePresenter do
   let(:game) do
     Game.create! do |game|
       game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
-      # Don't need a round at the moment but when we do create it here
+      game.rounds.new(:deck_seed => 989)
+      game.rounds.new(:deck_seed => 959)
     end
   end
+  let(:current_round) { game.rounds.last }
   let(:deck) { Deck.new(:seed => Random.new_seed) }
-  let(:dealer) { Dealer.new(:deck => deck, :number_of_players => 2) }
-  let(:deal) { dealer.deal }
+  let(:dealer) { Dealer.new(:deck => deck) }
+  let(:deal) { dealer.deal(:number_of_players => 2) }
 
-  subject(:presenter) { CurrentRoundGamePresenter.new(:game => game, :game_state => deal) }
+  subject(:presenter) do
+    CurrentRoundGamePresenter.new(
+      :game => game,
+      :current_round => current_round,
+      :game_state => deal
+    )
+  end
 
   it 'decorates a game' do
     expect(presenter).to eq game
+  end
+
+  describe '#current_round' do
+    it 'returns the current round' do
+      expect(presenter.current_round).to be current_round
+    end
   end
 
   describe '#current_round_number' do

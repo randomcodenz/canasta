@@ -1,14 +1,13 @@
-class CurrentRoundGamePresenter < SimpleDelegator
+class CurrentRoundPresenter < SimpleDelegator
   attr_reader :current_round, :game_state
 
   def initialize(current_round:, game_state:)
-    super(current_round.game)
+    super(current_round)
     @game_state = game_state
-    @current_round = current_round
   end
 
   def current_round_number
-    rounds.count
+    game.rounds.count
   end
 
   def discard_pile_top_card
@@ -24,7 +23,7 @@ class CurrentRoundGamePresenter < SimpleDelegator
   end
 
   def players
-    super.sort_by(&:id)
+    game.players.sort_by(&:id)
       .zip(game_state.player_hands)
       .map { |player, cards| CurrentRoundPlayerPresenter.new(:player => player, :cards => cards) }
   end

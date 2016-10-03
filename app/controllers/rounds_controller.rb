@@ -1,11 +1,11 @@
 class RoundsController < ApplicationController
   def show
-    round = Round.with_game_and_players.find(params[:id])
-    service = ReplayRoundService.new(:round => round)
+    current_round = Round.with_game_and_players.find(params[:id])
+    service = ReplayRoundService.new(:round => current_round)
     game_state = service.call
 
-    @game = CurrentRoundGamePresenter.new(
-      :current_round => round,
+    @round = CurrentRoundPresenter.new(
+      :current_round => current_round,
       :game_state => game_state
     )
   end

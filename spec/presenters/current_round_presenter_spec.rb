@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CurrentRoundGamePresenter do
+describe CurrentRoundPresenter do
   let(:game) do
     Game.create! do |game|
       game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
@@ -20,14 +20,8 @@ describe CurrentRoundGamePresenter do
     )
   end
 
-  it 'decorates a game' do
-    expect(presenter).to eq game
-  end
-
-  describe '#current_round' do
-    it 'returns the current round' do
-      expect(presenter.current_round).to be current_round
-    end
+  it 'decorates a round' do
+    expect(presenter).to eq current_round
   end
 
   describe '#current_round_number' do

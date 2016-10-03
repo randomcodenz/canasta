@@ -15,12 +15,12 @@ describe RoundsController, :type => :controller do
 
       before { get :show, params }
 
-      it 'assigns the requested game to @game' do
-        expect(assigns(:game)).to eq game
+      it 'assigns the requested round to @round' do
+        expect(assigns(:round)).to eq round
       end
 
-      it 'wraps the requested game in a CurrentRoundGamePresenter' do
-        expect(assigns(:game)).to be_an_instance_of CurrentRoundGamePresenter
+      it 'wraps the requested round in a CurrentRoundPresenter' do
+        expect(assigns(:round)).to be_an_instance_of CurrentRoundPresenter
       end
     end
 

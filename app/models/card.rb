@@ -30,6 +30,30 @@ class Card
     end
   end
 
+  def self.from_s(card_name:)
+    card_name_symbols = card_name.downcase.split.map(&:to_sym)
+
+    if card_name_symbols && card_name_symbols.any?
+      joker_from_symbols(card_name_symbols) || card_from_symbols(card_name_symbols)
+    end
+  end
+
+  private_class_method
+
+  def self.joker_from_symbols(card_name_symbols)
+    Card.new(:rank => JOKER) if card_name_symbols.include?(JOKER)
+  end
+
+  def self.card_from_symbols(card_name_symbols)
+    candidate_ranks = RANKS & card_name_symbols
+    candidate_suits = SUITS & card_name_symbols
+
+    card_rank = candidate_ranks.first if candidate_ranks.size == 1
+    card_suit = candidate_suits.first if candidate_suits.size == 1
+
+    Card.new(:rank => card_rank, :suit => card_suit) if card_rank && card_suit
+  end
+
   private
 
   def compare_identical(other)

@@ -72,4 +72,34 @@ describe Card do
       end
     end
   end
+
+  describe '#from_s' do
+    let(:card_name) { source_card.to_s }
+
+    subject(:card) { Card.from_s(:card_name => card_name) }
+
+    context 'when the card has a suit and rank' do
+      let(:source_card) { Card.new(:rank => :queen, :suit => :hearts) }
+
+      it 'parses the rank' do
+        expect(card.rank).to eq source_card.rank
+      end
+
+      it 'parses the suit' do
+        expect(card.suit).to eq source_card.suit
+      end
+    end
+
+    context 'when the card is a joker' do
+      let(:source_card) { Card.new(:rank => :joker) }
+
+      it 'parses the rank' do
+        expect(card.rank).to eq :joker
+      end
+
+      it 'sets the suit to none' do
+        expect(card.suit).to eq :none
+      end
+    end
+  end
 end

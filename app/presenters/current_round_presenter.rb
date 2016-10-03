@@ -25,7 +25,7 @@ class CurrentRoundPresenter < SimpleDelegator
   def players
     game.players.sort_by(&:id)
       .zip(game_state.player_hands)
-      .map { |player, cards| CurrentRoundPlayerPresenter.new(:player => player, :cards => cards) }
+      .map { |player, hand| CurrentRoundPlayerPresenter.new(:player => player, :hand => hand) }
   end
 
   private

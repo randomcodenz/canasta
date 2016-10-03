@@ -14,7 +14,7 @@ describe CurrentRoundPresenter do
   let(:deal) { dealer.deal(:number_of_players => 2) }
 
   subject(:presenter) do
-    CurrentRoundGamePresenter.new(
+    CurrentRoundPresenter.new(
       :current_round => current_round,
       :game_state => deal
     )
@@ -40,8 +40,8 @@ describe CurrentRoundPresenter do
     end
 
     it 'matches each player to their hand' do
-      expect(presenter.players[0].cards).to eq deal.player_hands[0]
-      expect(presenter.players[1].cards).to eq deal.player_hands[1]
+      expect(presenter.players[0].hand).to eq deal.player_hands[0]
+      expect(presenter.players[1].hand).to eq deal.player_hands[1]
     end
   end
 

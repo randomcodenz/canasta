@@ -1,3 +1,5 @@
+require 'bigint_random_seed'
+
 class CreateRoundService
   attr_reader :game_id, :seed_generator
 

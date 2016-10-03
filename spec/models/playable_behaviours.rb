@@ -2,8 +2,11 @@
 # like a playable.
 # To use:
 # => require 'models/playable_behaviours' at the top of your spec file
-# => call the shared examples with: it_behaves_like 'a playable object', playable
-shared_examples 'a playable object' do |playable|
+# => call the shared examples with:
+# => it_behaves_like 'a playable object' do
+# =>  let(:playable) { ... create / pass the playable ... }
+# => end
+shared_examples 'a playable object' do
   it 'is playable' do
     expect(playable).to be_a Playable
   end

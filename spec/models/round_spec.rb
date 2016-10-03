@@ -6,7 +6,9 @@ describe Round, :type => :model do
 
   it { is_expected.to have_many(:player_actions).dependent(:destroy) }
 
-  it_behaves_like 'a playable object', Round.new
+  it_behaves_like 'a playable object' do
+    let(:playable) { Round.new }
+  end
 
   describe '#deck_seed' do
     it { is_expected.to validate_presence_of(:deck_seed) }

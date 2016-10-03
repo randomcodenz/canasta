@@ -8,6 +8,7 @@ describe PickUpCards, :type => :model do
     expect(pick_up_cards).to be_a(PlayerAction)
   end
 
-  # TODO: Fix this - why can't we pass pick_up_cards here?
-  it_behaves_like 'a playable object', PickUpCards.new
+  it_behaves_like 'a playable object' do
+    let(:playable) { pick_up_cards }
+  end
 end

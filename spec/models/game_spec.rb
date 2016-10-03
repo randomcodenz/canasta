@@ -6,7 +6,9 @@ describe Game, :type => :model do
 
   it { is_expected.to have_many(:rounds).dependent(:destroy) }
 
-  it_behaves_like 'a playable object', Game.new
+  it_behaves_like 'a playable object' do
+    let(:playable) { Game.new }
+  end
 
   describe '#playable_actions' do
     # When a game has no rounds

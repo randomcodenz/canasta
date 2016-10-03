@@ -86,6 +86,8 @@ class GameEngine
       # Only want the first instance of the card that matches
       discard_index = current_player_hand.index(card)
       discard_pile << current_player_hand.delete_at(discard_index)
+
+      change_current_player!
     end
 
     no_errors?

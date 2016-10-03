@@ -387,6 +387,10 @@ describe GameEngine do
         expect(game_engine.discard(:card => card_to_discard)).to be false
       end
 
+      it 'does not change the current player' do
+        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.current_player, :object_id)
+      end
+
       it 'sets an error indicating why the player cannot discard' do
         game_engine.discard(:card => card_to_discard)
         expect(game_engine.errors).to eq [
@@ -404,6 +408,10 @@ describe GameEngine do
 
       it 'returns false' do
         expect(game_engine.discard(:card => card_to_discard)).to be false
+      end
+
+      it 'does not change the current player' do
+        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.current_player, :object_id)
       end
 
       it 'sets an error indicating why the player cannot discard' do
@@ -429,6 +437,10 @@ describe GameEngine do
         expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.discard_pile, :size)
       end
 
+      it 'does not change the current player' do
+        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.current_player, :object_id)
+      end
+
       it 'returns false' do
         expect(game_engine.discard(:card => card_to_discard)).to be false
       end
@@ -447,9 +459,11 @@ describe GameEngine do
       end
 
       it 'removes the card from the current players hand' do
+        current_player_hand = game_engine.current_player_hand
         card_to_discard_count = game_engine.current_player_hand.count { |card| card == card_to_discard }
+
         expect { game_engine.discard(:card => card_to_discard) }
-          .to change { game_engine.current_player_hand.count { |card| card == card_to_discard } }
+          .to change { current_player_hand.count { |card| card == card_to_discard } }
           .from(card_to_discard_count).to(card_to_discard_count - 1)
       end
 
@@ -458,6 +472,12 @@ describe GameEngine do
         expect { game_engine.discard(:card => card_to_discard) }
           .to change { game_engine.discard_pile.count { |card| card == card_to_discard } }
           .from(discarded_card_count).to(discarded_card_count + 1)
+      end
+
+      it 'ends the current players turn' do
+        current_player = game_engine.current_player
+        game_engine.discard(:card => card_to_discard)
+        expect(game_engine.current_player).not_to be current_player
       end
 
       it 'returns true' do

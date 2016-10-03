@@ -14,7 +14,7 @@ class GameEngine
   end
 
   def current_player_hand
-    current_player.hand
+    current_player && current_player.hand
   end
 
   def can_start_round?
@@ -55,7 +55,7 @@ class GameEngine
     @errors = []
 
     assert_round_started
-    @errors << 'Round has not been dealt' unless round_dealt?
+    assert_round_dealt
     @errors << 'Player has already picked up' if current_player_picked_up?
 
     no_errors?
@@ -65,6 +65,27 @@ class GameEngine
     if can_pick_up_cards?
       current_player.hand += stock.shift(2)
       current_player.picked_up = true
+    end
+
+    no_errors?
+  end
+
+  def can_discard?(card: nil)
+    @errors = []
+
+    assert_round_started
+    assert_round_dealt
+    @errors << 'Player has not picked up' unless current_player_picked_up?
+    @errors << "Hand does not include #{card}" unless card.nil? || errors.any? || current_player_hand_contains?(card)
+
+    no_errors?
+  end
+
+  def discard(card:)
+    if can_discard?(:card => card)
+      # Only want the first instance of the card that matches
+      discard_index = current_player_hand.index(card)
+      discard_pile << current_player_hand.delete_at(discard_index)
     end
 
     no_errors?
@@ -100,11 +121,19 @@ class GameEngine
     current_player ? current_player.picked_up : false
   end
 
+  def current_player_hand_contains?(card)
+    current_player_hand && current_player_hand.include?(card)
+  end
+
   def change_current_player!
     players.rotate!
   end
 
   def assert_round_started
     @errors << 'Round has not been started' unless round_started?
+  end
+
+  def assert_round_dealt
+    @errors << 'Round has not been dealt' unless round_dealt?
   end
 end

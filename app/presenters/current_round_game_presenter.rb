@@ -1,8 +1,8 @@
 class CurrentRoundGamePresenter < SimpleDelegator
-  attr_reader :current_round
+  attr_reader :current_round, :game_state
 
-  def initialize(game:, current_round:, game_state:)
-    super(game)
+  def initialize(current_round:, game_state:)
+    super(current_round.game)
     @game_state = game_state
     @current_round = current_round
   end

@@ -15,7 +15,6 @@ describe CurrentRoundGamePresenter do
 
   subject(:presenter) do
     CurrentRoundGamePresenter.new(
-      :game => game,
       :current_round => current_round,
       :game_state => deal
     )

@@ -34,7 +34,7 @@ When(/^I view the game$/) do
 end
 
 When(/^I view the round$/) do
-  visit game_round_path(Game.last, Round.last)
+  visit round_path(Round.last)
 end
 
 When(/^I start a new round$/) do
@@ -54,7 +54,7 @@ Then(/^I should see (\d+) players$/) do |player_count|
 end
 
 Then(/^I can see Round (\d+)$/) do |round_number|
-  expect(page.current_path).to eq "/games/#{Game.last.id}/rounds/#{Round.last.id}"
+  expect(page.current_path).to eq "/rounds/#{Round.last.id}"
   expect(find('#round_number').text).to eq "Round #{round_number}"
 end
 
@@ -72,14 +72,14 @@ Then(/^I should see the top card of the discard pile$/) do
   expect(find('#discard_pile').text).to include 'Five of Hearts'
 end
 
-Then(/^I should see the discard pile contains (\d+) (card|cards)$/) do |number_cards, card_or_cards|
-  expect(find('#discard_pile').text).to include "(#{number_cards} #{card_or_cards})"
+Then(/^I should see the discard pile contains (\d+) (card|cards)$/) do |number_of_cards, card_or_cards|
+  expect(find('#discard_pile').text).to include "(#{number_of_cards} #{card_or_cards})"
 end
 
 Then(/^I should see the stock$/) do
   expect(find('#stock').text).to include 'Stock'
 end
 
-Then(/^I should see the stock contains (\d+) (card|cards)$/) do |number_cards, card_or_cards|
-  expect(find('#stock').text).to include "(#{number_cards} #{card_or_cards})"
+Then(/^I should see the stock contains (\d+) (card|cards)$/) do |number_of_cards, card_or_cards|
+  expect(find('#stock').text).to include "(#{number_of_cards} #{card_or_cards})"
 end

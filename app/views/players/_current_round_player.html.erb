@@ -1,5 +1,5 @@
 <div class="player">
-  <%= current_round_player.name %>
+  <%= current_round_player.name %> (<%= describe_pile_size current_round_player.cards.size %>)
   <ul class="cards">
     <% current_round_player.cards.each do |card| %>
       <li class="card"><%= card %></li>

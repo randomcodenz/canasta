@@ -5,7 +5,7 @@ class DealRoundPlayableAction < PlayableAction
     @deck_seed = deck_seed
   end
 
-  def apply_to(game_context)
+  def apply_to(game_context:)
     deck = Deck.new(:seed => deck_seed)
     dealer = Dealer.new(:deck => deck)
     game_context.deal(:dealer => dealer)

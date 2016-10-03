@@ -28,7 +28,7 @@ describe DealRoundPlayableAction do
   subject(:playable_action) { DealRoundPlayableAction.new(:deck_seed => deck_seed) }
 
   describe '#apply_to' do
-    before { playable_action.apply_to(game_engine) }
+    before { playable_action.apply_to(:game_context => game_engine) }
 
     it 'asks game context to deal a round' do
       expect(game_engine.deal_was_called).to be true
@@ -39,7 +39,7 @@ describe DealRoundPlayableAction do
     end
 
     it 'returns the result of asking the game context to deal a round' do
-      expect(playable_action.apply_to(game_engine)).to eq can_deal
+      expect(playable_action.apply_to(:game_context => game_engine)).to eq can_deal
     end
   end
 end

@@ -1,5 +1,5 @@
 module PlayableActions
-  class DiscardPlayableAction < PlayableAction
+  class Discard < PlayableAction
     attr_reader :card_name, :card
 
     def initialize(card_name:)

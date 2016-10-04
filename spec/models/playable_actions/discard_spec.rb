@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module PlayableActions
-  describe DiscardPlayableAction do
+  describe Discard do
     let(:can_discard) { true }
     let(:card_to_discard) { Card.new(:rank => :seven, :suit => :spades) }
     let(:card_name) { card_to_discard.to_s }
@@ -13,7 +13,7 @@ module PlayableActions
       )
     end
 
-    subject(:playable_action) { DiscardPlayableAction.new(:card_name => card_name) }
+    subject(:playable_action) { Discard.new(:card_name => card_name) }
 
     it 'converts the card name to a card' do
       expect(playable_action.card).to eq card_to_discard

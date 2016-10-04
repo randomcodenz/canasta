@@ -38,7 +38,7 @@ module PlayerActions
 
       describe '#playable_action' do
         it 'returns a discard playable action' do
-          expect(discard.playable_action).to be_a(PlayableActions::DiscardPlayableAction)
+          expect(discard.playable_action).to be_a(PlayableActions::Discard)
         end
 
         it 'passes the card name to the discard playable action' do

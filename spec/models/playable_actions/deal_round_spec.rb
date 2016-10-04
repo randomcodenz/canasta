@@ -21,12 +21,12 @@ module PlayableActions
     end
   end
 
-  describe DealRoundPlayableAction do
+  describe DealRound do
     let(:can_deal) { true }
     let(:deck_seed) { 959 }
     let(:game_engine) { DealRoundPlayableActionStubs::DummyGameEngine.new(:can_deal => can_deal) }
 
-    subject(:playable_action) { DealRoundPlayableAction.new(:deck_seed => deck_seed) }
+    subject(:playable_action) { DealRound.new(:deck_seed => deck_seed) }
 
     describe '#apply_to' do
       before { playable_action.apply_to(:game_context => game_engine) }

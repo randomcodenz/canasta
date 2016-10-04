@@ -1,5 +1,5 @@
 module PlayableActions
-  class DealRoundPlayableAction < PlayableAction
+  class DealRound < PlayableAction
     attr_reader :deck_seed
 
     def initialize(deck_seed:)

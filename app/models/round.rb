@@ -18,6 +18,6 @@ class Round < ActiveRecord::Base
   end
 
   def playable_action
-    PlayableActions::DealRoundPlayableAction.new(:deck_seed => deck_seed)
+    PlayableActions::DealRound.new(:deck_seed => deck_seed)
   end
 end

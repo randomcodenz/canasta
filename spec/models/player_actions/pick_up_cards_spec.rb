@@ -33,7 +33,7 @@ module PlayerActions
 
       describe '#playable_action' do
         it 'returns a pick up cards playable action' do
-          expect(pick_up_cards.playable_action).to be_a(PlayableActions::PickUpCardsPlayableAction)
+          expect(pick_up_cards.playable_action).to be_a(PlayableActions::PickUpCards)
         end
       end
     end

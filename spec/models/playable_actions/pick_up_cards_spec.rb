@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module PlayableActions
-  describe PickUpCardsPlayableAction do
+  describe PickUpCards do
     let(:can_pick_up_cards) { true }
     let(:game_engine) do
       instance_double(
@@ -11,7 +11,7 @@ module PlayableActions
       )
     end
 
-    subject(:playable_action) { PickUpCardsPlayableAction.new }
+    subject(:playable_action) { PickUpCards.new }
 
     describe '#apply_to' do
       before { playable_action.apply_to(:game_context => game_engine) }

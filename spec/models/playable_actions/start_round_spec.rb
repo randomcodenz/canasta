@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module PlayableActions
-  describe StartRoundPlayableAction do
+  describe StartRound do
     let(:can_start_round) { true }
     let(:number_of_players) { 2 }
     let(:game_engine) do
@@ -12,7 +12,7 @@ module PlayableActions
       )
     end
 
-    subject(:playable_action) { StartRoundPlayableAction.new(:number_of_players => number_of_players) }
+    subject(:playable_action) { StartRound.new(:number_of_players => number_of_players) }
 
     describe '#apply_to' do
       before { playable_action.apply_to(:game_context => game_engine) }

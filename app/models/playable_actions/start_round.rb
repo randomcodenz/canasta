@@ -1,5 +1,5 @@
 module PlayableActions
-  class StartRoundPlayableAction < PlayableAction
+  class StartRound < PlayableAction
     attr_reader :number_of_players
 
     def initialize(number_of_players:)

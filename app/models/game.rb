@@ -18,6 +18,6 @@ class Game < ActiveRecord::Base
   end
 
   def playable_action
-    PlayableActions::StartRoundPlayableAction.new(:number_of_players => players.count)
+    PlayableActions::StartRound.new(:number_of_players => players.count)
   end
 end

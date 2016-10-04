@@ -58,7 +58,7 @@ describe Game, :type => :model do
 
     describe '#playable_action' do
       it 'returns a start round playable action' do
-        expect(game.playable_action).to be_a(PlayableActions::StartRoundPlayableAction)
+        expect(game.playable_action).to be_a(PlayableActions::StartRound)
       end
 
       it 'passes the number of players to the start round playable action' do

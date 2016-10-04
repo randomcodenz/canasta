@@ -32,7 +32,7 @@ describe PickUpCards, :type => :model do
 
     describe '#playable_action' do
       it 'returns a pick up cards playable action' do
-        expect(pick_up_cards.playable_action).to be_a(PickUpCardsPlayableAction)
+        expect(pick_up_cards.playable_action).to be_a(PlayableActions::PickUpCardsPlayableAction)
       end
     end
   end

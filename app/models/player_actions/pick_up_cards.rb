@@ -1,5 +1,5 @@
 class PickUpCards < PlayerAction
   def playable_action
-    PickUpCardsPlayableAction.new
+    PlayableActions::PickUpCardsPlayableAction.new
   end
 end

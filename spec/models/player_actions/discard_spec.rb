@@ -37,7 +37,7 @@ describe Discard, :type => :model do
 
     describe '#playable_action' do
       it 'returns a discard playable action' do
-        expect(discard.playable_action).to be_a(DiscardPlayableAction)
+        expect(discard.playable_action).to be_a(PlayableActions::DiscardPlayableAction)
       end
 
       it 'passes the card name to the discard playable action' do

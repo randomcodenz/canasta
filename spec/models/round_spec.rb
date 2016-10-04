@@ -47,7 +47,7 @@ describe Round, :type => :model do
 
     describe '#playable_action' do
       it 'returns a deal round playable action' do
-        expect(round.playable_action).to be_a(DealRoundPlayableAction)
+        expect(round.playable_action).to be_a(PlayableActions::DealRoundPlayableAction)
       end
 
       it 'passes the deck seed to the deal round playable action' do

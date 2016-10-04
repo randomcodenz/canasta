@@ -19,7 +19,7 @@ describe PickUpCardsController, :type => :controller do
 
       it 'creates a new "pick up cards" player action' do
         post :create, params
-        expect(round.player_actions.last.type).to eq PickUpCards.name
+        expect(round.player_actions.last.type).to eq PlayerActions::PickUpCards.name
       end
 
       it 'redirects to the current round' do

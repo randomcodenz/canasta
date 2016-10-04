@@ -31,7 +31,7 @@ describe Round, :type => :model do
 
     describe '#child_playables' do
       context 'when the round has player actions' do
-        before { round.player_actions << PickUpCards.new }
+        before { round.player_actions << PlayerActions::PickUpCards.new }
 
         it 'returns the player actions' do
           expect(round.child_playables).to contain_exactly(*round.player_actions)

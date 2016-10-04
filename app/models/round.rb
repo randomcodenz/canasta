@@ -9,17 +9,15 @@ class Round < ActiveRecord::Base
     includes(:game => :players)
   end
 
-  def playable_actions
-    [playable_action] + player_action_playable_actions
+  def parent_playable
+    game
   end
 
-  private
+  def child_playables
+    player_actions.to_a
+  end
 
   def playable_action
     DealRoundPlayableAction.new(:deck_seed => deck_seed)
-  end
-
-  def player_action_playable_actions
-    player_actions.order(:id).map { |player_action| player_action.playable_actions }.flatten
   end
 end

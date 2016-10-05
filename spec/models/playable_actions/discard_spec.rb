@@ -20,14 +20,14 @@ module PlayableActions
     end
 
     describe '#apply_to' do
-      before { playable_action.apply_to(:game_context => game_engine) }
+      before { playable_action.apply_to(:game_engine => game_engine) }
 
       it 'asks game context to discard the specified card' do
         expect(game_engine).to have_received(:discard).with(:card => card_to_discard)
       end
 
-      it 'returns the result of asking the game context to discard' do
-        expect(playable_action.apply_to(:game_context => game_engine)).to eq can_discard
+      it 'returns the result of asking the game engine to discard' do
+        expect(playable_action.apply_to(:game_engine => game_engine)).to eq can_discard
       end
     end
   end

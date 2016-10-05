@@ -7,15 +7,8 @@ class ReplayRoundService
 
   def call
     @game_engine = GameEngine.new
-    playable_actions.each do |playable_action|
-      playable_action.apply_to(:game_context => game_engine)
-    end
+    replay_round = PlayableVisitors::ReplayRound.new(:game_engine => game_engine)
+    round.accept(:playable_visitor => replay_round)
     game_engine
-  end
-
-  private
-
-  def playable_actions
-    round.game.playable_actions
   end
 end

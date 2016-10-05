@@ -6,10 +6,10 @@ module PlayableActions
       @deck_seed = deck_seed
     end
 
-    def apply_to(game_context:)
+    def apply_to(game_engine:)
       deck = Deck.new(:seed => deck_seed)
       dealer = Dealer.new(:deck => deck)
-      game_context.deal(:dealer => dealer)
+      game_engine.deal(:dealer => dealer)
     end
   end
 end

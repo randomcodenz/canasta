@@ -6,8 +6,8 @@ module PlayableActions
       @number_of_players = number_of_players
     end
 
-    def apply_to(game_context:)
-      game_context.start_round(:number_of_players => number_of_players)
+    def apply_to(game_engine:)
+      game_engine.start_round(:number_of_players => number_of_players)
     end
   end
 end

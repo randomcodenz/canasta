@@ -7,8 +7,8 @@ module PlayableActions
       @card = Card.from_s(:card_name => card_name)
     end
 
-    def apply_to(game_context:)
-      game_context.discard(:card => card)
+    def apply_to(game_engine:)
+      game_engine.discard(:card => card)
     end
   end
 end

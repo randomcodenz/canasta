@@ -14,14 +14,14 @@ module PlayableActions
     subject(:playable_action) { PickUpCards.new }
 
     describe '#apply_to' do
-      before { playable_action.apply_to(:game_context => game_engine) }
+      before { playable_action.apply_to(:game_engine => game_engine) }
 
       it 'asks game context to pick up cards' do
         expect(game_engine).to have_received(:pick_up_cards)
       end
 
-      it 'returns the result of asking the game context to pick up cards' do
-        expect(playable_action.apply_to(:game_context => game_engine)).to eq can_pick_up_cards
+      it 'returns the result of asking the game engine to pick up cards' do
+        expect(playable_action.apply_to(:game_engine => game_engine)).to eq can_pick_up_cards
       end
     end
   end

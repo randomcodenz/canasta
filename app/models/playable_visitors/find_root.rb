@@ -1,5 +1,5 @@
 module PlayableVisitors
-  class FindRootPlayableVisitor
+  class FindRoot
     def visit(playable)
       root_playable?(playable) ? playable : visit(playable.parent_playable)
     end

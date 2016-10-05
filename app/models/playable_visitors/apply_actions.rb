@@ -1,5 +1,5 @@
 module PlayableVisitors
-  class ApplyActionsPlayableVisitor
+  class ApplyActions
     attr_reader :game_engine
 
     def initialize(game_engine:)

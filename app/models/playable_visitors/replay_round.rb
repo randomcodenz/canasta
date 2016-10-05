@@ -1,5 +1,5 @@
 module PlayableVisitors
-  class ReplayRoundPlayableVisitor
+  class ReplayRound
     attr_reader :game_engine, :root_playable
 
     def initialize(game_engine:)
@@ -14,12 +14,12 @@ module PlayableVisitors
     private
 
     def find_root(playable)
-      find_root_visitor = FindRootPlayableVisitor.new
+      find_root_visitor = FindRoot.new
       find_root_visitor.visit(playable)
     end
 
     def replay_actions(root_playable)
-      apply_actions_visitor = ApplyActionsPlayableVisitor.new(:game_engine => game_engine)
+      apply_actions_visitor = ApplyActions.new(:game_engine => game_engine)
       apply_actions_visitor.visit(root_playable)
     end
   end

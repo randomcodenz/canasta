@@ -9,12 +9,12 @@ class GameEngine
     players.sort_by { |player| player.index }.map { |player| player.hand }
   end
 
-  def current_player
+  def active_player
     players && players[0]
   end
 
-  def current_player_hand
-    current_player && current_player.hand
+  def active_player_hand
+    active_player && active_player.hand
   end
 
   def can_start_round?
@@ -56,15 +56,15 @@ class GameEngine
 
     assert_round_started
     assert_round_dealt
-    @errors << 'Player has already picked up' if current_player_picked_up?
+    @errors << 'Player has already picked up' if active_player_picked_up?
 
     no_errors?
   end
 
   def pick_up_cards
     if can_pick_up_cards?
-      current_player.hand += stock.shift(2)
-      current_player.picked_up = true
+      active_player.hand += stock.shift(2)
+      active_player.picked_up = true
     end
 
     no_errors?
@@ -75,8 +75,8 @@ class GameEngine
 
     assert_round_started
     assert_round_dealt
-    @errors << 'Player has not picked up' unless current_player_picked_up?
-    @errors << "Hand does not include #{card}" unless card.nil? || errors.any? || current_player_hand_contains?(card)
+    @errors << 'Player has not picked up' unless active_player_picked_up?
+    @errors << "Hand does not include #{card}" unless card.nil? || errors.any? || active_player_hand_contains?(card)
 
     no_errors?
   end
@@ -84,10 +84,10 @@ class GameEngine
   def discard(card:)
     if can_discard?(:card => card)
       # Only want the first instance of the card that matches
-      discard_index = current_player_hand.index(card)
-      discard_pile << current_player_hand.delete_at(discard_index)
+      discard_index = active_player_hand.index(card)
+      discard_pile << active_player_hand.delete_at(discard_index)
 
-      change_current_player!
+      change_active_player!
     end
 
     no_errors?
@@ -119,15 +119,15 @@ class GameEngine
     stock && stock.any?
   end
 
-  def current_player_picked_up?
-    current_player ? current_player.picked_up : false
+  def active_player_picked_up?
+    active_player ? active_player.picked_up : false
   end
 
-  def current_player_hand_contains?(card)
-    current_player_hand && current_player_hand.include?(card)
+  def active_player_hand_contains?(card)
+    active_player_hand && active_player_hand.include?(card)
   end
 
-  def change_current_player!
+  def change_active_player!
     players.rotate!
   end
 

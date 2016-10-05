@@ -236,9 +236,9 @@ describe GameEngine do
       game_engine.deal(:dealer => dealer)
     end
 
-    context 'when the current player has not picked up from stock' do
+    context 'when the active player has not picked up from stock' do
       let!(:stock_size) { game_engine.stock.size }
-      let!(:current_player_hand_size) { game_engine.current_player_hand.size }
+      let!(:active_player_hand_size) { game_engine.active_player_hand.size }
       let!(:top_two_cards) { game_engine.stock.take(2) }
 
       context 'when there are 2 players' do
@@ -247,10 +247,10 @@ describe GameEngine do
           expect(game_engine.stock.size).to eq stock_size - 2
         end
 
-        it 'adds top 2 cards from stock to the current players hand' do
+        it 'adds top 2 cards from stock to the active players hand' do
           game_engine.pick_up_cards
-          expect(game_engine.current_player_hand.size).to eq current_player_hand_size + 2
-          expect(game_engine.current_player_hand).to include(*top_two_cards)
+          expect(game_engine.active_player_hand.size).to eq active_player_hand_size + 2
+          expect(game_engine.active_player_hand).to include(*top_two_cards)
         end
 
         it 'returns true' do
@@ -264,7 +264,7 @@ describe GameEngine do
       end
     end
 
-    context 'when the current player has picked up from stock' do
+    context 'when the active player has picked up from stock' do
       before { game_engine.pick_up_cards }
 
       it 'does not take any cards from stock' do
@@ -272,7 +272,7 @@ describe GameEngine do
       end
 
       it 'does not add any cards to the players hand' do
-        expect { game_engine.pick_up_cards }.not_to change(game_engine.current_player_hand, :size)
+        expect { game_engine.pick_up_cards }.not_to change(game_engine.active_player_hand, :size)
       end
 
       it 'returns false' do
@@ -285,7 +285,7 @@ describe GameEngine do
       end
     end
 
-    context 'when the current player has picked up the discard pile' do
+    context 'when the active player has picked up the discard pile' do
       it 'does not take the discard pile'
       it 'does not add any cards to the players hand'
       it 'returns false'
@@ -389,7 +389,7 @@ describe GameEngine do
       end
 
       it 'does not change the current player' do
-        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.current_player, :object_id)
+        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.active_player, :object_id)
       end
 
       it 'sets an error indicating why the player cannot discard' do
@@ -411,8 +411,8 @@ describe GameEngine do
         expect(game_engine.discard(:card => card_to_discard)).to be false
       end
 
-      it 'does not change the current player' do
-        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.current_player, :object_id)
+      it 'does not change the active player' do
+        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.active_player, :object_id)
       end
 
       it 'sets an error indicating why the player cannot discard' do
@@ -424,22 +424,22 @@ describe GameEngine do
       end
     end
 
-    context 'when the current player has not picked up' do
+    context 'when the active player has not picked up' do
       before do
         game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
       end
 
-      it 'does not remove any cards from the current players hand' do
-        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.current_player_hand, :size)
+      it 'does not remove any cards from the active players hand' do
+        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.active_player_hand, :size)
       end
 
       it 'does not add any cards to the discard pile' do
         expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.discard_pile, :size)
       end
 
-      it 'does not change the current player' do
-        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.current_player, :object_id)
+      it 'does not change the active player' do
+        expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.active_player, :object_id)
       end
 
       it 'returns false' do
@@ -452,19 +452,19 @@ describe GameEngine do
       end
     end
 
-    context 'when the current player has picked up' do
+    context 'when the active player has picked up' do
       before do
         game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
         game_engine.pick_up_cards
       end
 
-      it 'removes the card from the current players hand' do
-        current_player_hand = game_engine.current_player_hand
-        card_to_discard_count = game_engine.current_player_hand.count { |card| card == card_to_discard }
+      it 'removes the card from the active players hand' do
+        active_player_hand = game_engine.active_player_hand
+        card_to_discard_count = game_engine.active_player_hand.count { |card| card == card_to_discard }
 
         expect { game_engine.discard(:card => card_to_discard) }
-          .to change { current_player_hand.count { |card| card == card_to_discard } }
+          .to change { active_player_hand.count { |card| card == card_to_discard } }
           .from(card_to_discard_count).to(card_to_discard_count - 1)
       end
 
@@ -475,10 +475,10 @@ describe GameEngine do
           .from(discarded_card_count).to(discarded_card_count + 1)
       end
 
-      it 'ends the current players turn' do
-        current_player = game_engine.current_player
+      it 'ends the active players turn' do
+        active_player = game_engine.active_player
         game_engine.discard(:card => card_to_discard)
-        expect(game_engine.current_player).not_to be current_player
+        expect(game_engine.active_player).not_to be active_player
       end
 
       it 'returns true' do

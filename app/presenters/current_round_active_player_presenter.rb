@@ -1,4 +1,4 @@
-class CurrentRoundPlayerPresenter < SimpleDelegator
+class CurrentRoundActivePlayerPresenter < SimpleDelegator
   def initialize(player:)
     super(player)
   end
@@ -12,6 +12,6 @@ class CurrentRoundPlayerPresenter < SimpleDelegator
   end
 
   def to_partial_path
-    'players/current_round_player'
+    'players/current_round_active_player'
   end
 end

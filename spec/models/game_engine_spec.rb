@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe GameEngine do
-  let(:number_of_players) { 2 }
+  let(:player_names) { ['Player 1', 'Player 2'] }
+  let(:number_of_players) { player_names.size }
   let(:deck) { Deck.new(:seed => 959) }
   let(:dealer) { Dealer.new(:deck => deck) }
   let(:deal) { dealer.deal(:number_of_players => number_of_players) }
@@ -22,7 +23,7 @@ describe GameEngine do
     end
 
     context 'when a round has been started' do
-      before { game_engine.start_round(:number_of_players => number_of_players) }
+      before { game_engine.start_round(:player_names => player_names) }
 
       it 'returns false' do
         expect(game_engine.can_start_round?).to be false
@@ -38,36 +39,36 @@ describe GameEngine do
   describe '#start_round' do
     context 'when a round has not been started' do
       it 'captures the number of players' do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         expect(game_engine.number_of_players).to eq number_of_players
       end
 
       it 'returns true' do
-        expect(game_engine.start_round(:number_of_players => number_of_players)).to be true
+        expect(game_engine.start_round(:player_names => player_names)).to be true
       end
 
       it 'clears any errors' do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         expect(game_engine.errors).to be_empty
       end
     end
 
     context 'when a round has been started' do
-      let(:number_of_players) { 2 }
+      let(:new_player_names) { %w(1 2 3 4) }
 
-      before { game_engine.start_round(:number_of_players => number_of_players) }
+      before { game_engine.start_round(:player_names => player_names) }
 
       it 'does not update the number of players' do
-        game_engine.start_round(:number_of_players => 4)
+        game_engine.start_round(:player_names => new_player_names)
         expect(game_engine.number_of_players).to eq number_of_players
       end
 
       it 'returns false' do
-        expect(game_engine.start_round(:number_of_players => number_of_players)).to be false
+        expect(game_engine.start_round(:player_names => new_player_names)).to be false
       end
 
       it 'sets an error indicating a round has already been started' do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => new_player_names)
         expect(game_engine.errors).to eq ['Round has already been started']
       end
     end
@@ -86,7 +87,7 @@ describe GameEngine do
     end
 
     context 'when the round has not been dealt' do
-      before { game_engine.start_round(:number_of_players => number_of_players) }
+      before { game_engine.start_round(:player_names => player_names) }
 
       it 'returns true' do
         expect(game_engine.can_deal?).to be true
@@ -100,7 +101,7 @@ describe GameEngine do
 
     context 'when the round has already been dealt' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
       end
 
@@ -117,7 +118,7 @@ describe GameEngine do
 
   describe '#deal' do
     context 'when a round has not been dealt' do
-      before { game_engine.start_round(:number_of_players => number_of_players) }
+      before { game_engine.start_round(:player_names => player_names) }
 
       it 'deals cards for the number of players in the game' do
         game_engine.deal(:dealer => dealer)
@@ -136,7 +137,7 @@ describe GameEngine do
 
     context 'when a round has been dealt' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
       end
 
@@ -171,7 +172,7 @@ describe GameEngine do
 
     context 'when the round has not been dealt' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
       end
 
       it 'returns false' do
@@ -186,7 +187,7 @@ describe GameEngine do
 
     context 'when the current player has not picked up from stock' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
         # Deal again to add some errors
         game_engine.deal(:dealer => dealer)
@@ -204,7 +205,7 @@ describe GameEngine do
 
     context 'when the current player has picked up from stock' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
         # Deal again to add some errors
         game_engine.deal(:dealer => dealer)
@@ -229,7 +230,7 @@ describe GameEngine do
 
   describe '#pick_up_cards' do
     before do
-      game_engine.start_round(:number_of_players => number_of_players)
+      game_engine.start_round(:player_names => player_names)
       game_engine.deal(:dealer => dealer)
       # Deal again to add some errors
       game_engine.deal(:dealer => dealer)
@@ -310,7 +311,7 @@ describe GameEngine do
 
     context 'when the round has not been dealt' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
       end
 
       it 'returns false' do
@@ -328,7 +329,7 @@ describe GameEngine do
 
     context 'when the current player has not picked up' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
       end
 
@@ -344,7 +345,7 @@ describe GameEngine do
 
     context 'when the current player has picked up' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
         game_engine.pick_up_cards
       end
@@ -363,7 +364,7 @@ describe GameEngine do
       let(:card_to_discard) { Card.new(:rank => :seven, :suit => :clubs) }
 
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
         game_engine.pick_up_cards
       end
@@ -403,7 +404,7 @@ describe GameEngine do
 
     context 'when the round has not been dealt' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
       end
 
       it 'returns false' do
@@ -425,7 +426,7 @@ describe GameEngine do
 
     context 'when the current player has not picked up' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
       end
 
@@ -453,7 +454,7 @@ describe GameEngine do
 
     context 'when the current player has picked up' do
       before do
-        game_engine.start_round(:number_of_players => number_of_players)
+        game_engine.start_round(:player_names => player_names)
         game_engine.deal(:dealer => dealer)
         game_engine.pick_up_cards
       end

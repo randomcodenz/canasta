@@ -1,7 +1,9 @@
 class PlayerContext
-  attr_accessor :index, :hand, :picked_up
+  attr_reader :index, :name
+  attr_accessor :hand, :picked_up
 
-  def initialize(index:)
+  def initialize(index:, name:)
     @index = index
+    @name = name
   end
 end

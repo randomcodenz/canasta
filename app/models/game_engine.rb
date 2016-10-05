@@ -23,9 +23,9 @@ class GameEngine
     no_errors?
   end
 
-  def start_round(number_of_players:)
+  def start_round(player_names:)
     if can_start_round?
-      @players = Array.new(number_of_players) { |index| PlayerContext.new(:index => index) }
+      @players = player_names.each_with_index.map { |name, index| PlayerContext.new(:index => index, :name => name) }
     end
 
     no_errors?

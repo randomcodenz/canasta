@@ -4,9 +4,21 @@ Given(/^I am viewing the round$/) do
   visit round_path(Round.last)
 end
 
+Given(/^I have picked up (?:\d+) cards from stock$/) do
+  within('form#pick_up_cards') do
+    click_button('Pick up cards')
+  end
+end
+
 When(/^I pick up (?:\d+) cards from stock$/) do
   within('form#pick_up_cards') do
     click_button('Pick up cards')
+  end
+end
+
+When(/^I discard a card$/) do
+  within('form#discard') do
+    click_button('Discard')
   end
 end
 

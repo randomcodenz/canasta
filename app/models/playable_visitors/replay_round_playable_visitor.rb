@@ -18,7 +18,7 @@ class ReplayRoundPlayableVisitor
   end
 
   def replay_actions(root_playable)
-    apply_actions_visitor = ApplyActionsPlayableVisitor.new(:game_engine => game_engine)
+    apply_actions_visitor = PlayableVisitors::ApplyActionsPlayableVisitor.new(:game_engine => game_engine)
     apply_actions_visitor.visit(root_playable)
   end
 end

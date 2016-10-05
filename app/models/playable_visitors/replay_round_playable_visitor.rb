@@ -13,7 +13,7 @@ class ReplayRoundPlayableVisitor
   private
 
   def find_root(playable)
-    find_root_visitor = FindRootPlayableVisitor.new
+    find_root_visitor = PlayableVisitors::FindRootPlayableVisitor.new
     find_root_visitor.visit(playable)
   end
 

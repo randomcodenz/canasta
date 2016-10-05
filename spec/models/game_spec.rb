@@ -2,11 +2,11 @@ require 'rails_helper'
 require 'models/playable_behaviours'
 
 describe Game, :type => :model do
+  let(:player_names) { %w(P1 P2) }
+
   subject(:game) do
     Game.create! do |game|
-      game.players.new(:name => 'Player 1')
-      game.players.new(:name => 'Player 2')
-      game.rounds.new(:deck_seed => 959)
+      player_names.each { |name| game.players.new(:name => name) }
     end
   end
 
@@ -37,19 +37,14 @@ describe Game, :type => :model do
 
     describe '#child_playables' do
       context 'when the game has a current round' do
+        before { game.rounds.new(:deck_seed => 959) }
+
         it 'returns the current round' do
           expect(game.child_playables).to contain_exactly(game.current_round)
         end
       end
 
       context 'when the game has no current round' do
-        subject(:game) do
-          Game.create! do |game|
-            game.players.new(:name => 'Player 1')
-            game.players.new(:name => 'Player 2')
-          end
-        end
-
         it 'returns an empty array' do
           expect(game.child_playables).to be_empty
         end
@@ -61,8 +56,8 @@ describe Game, :type => :model do
         expect(game.playable_action).to be_a(PlayableActions::StartRound)
       end
 
-      it 'passes the number of players to the start round playable action' do
-        expect(game.playable_action.number_of_players).to eq game.players.count
+      it 'passes the player names to the start round playable action' do
+        expect(game.playable_action.player_names).to contain_exactly(*player_names)
       end
     end
   end

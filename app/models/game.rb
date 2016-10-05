@@ -18,6 +18,12 @@ class Game < ActiveRecord::Base
   end
 
   def playable_action
-    PlayableActions::StartRound.new(:number_of_players => players.count)
+    PlayableActions::StartRound.new(:player_names => player_names)
+  end
+
+  private
+
+  def player_names
+    players.map(&:name)
   end
 end

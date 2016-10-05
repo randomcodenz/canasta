@@ -24,6 +24,6 @@ class Game < ActiveRecord::Base
   private
 
   def player_names
-    players.map(&:name)
+    players.sort_by(&:id).map(&:name)
   end
 end

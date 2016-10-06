@@ -1,11 +1,14 @@
 <div class="player active_player">
   <b><%= current_round_active_player.name %></b> (<%= describe_pile_size current_round_active_player.hand_size %>)
-  <%= form_for :discard, :url => round_discards_path(current_round_active_player.round), :html => { :id => 'discard' } do |f| %>
+  <%= form_for :player_action, :html => { :id => 'player_actions' } do |f| %>
     <ul class="cards">
       <% current_round_active_player.hand.each do |card| %>
         <li class="card"><input type="radio" id="<%= card %>" name="selected_card" value="<%= card %>"/><label for="<%= card %>"><%= card %></label></li>
       <% end %>
     </ul>
-    <%= f.submit('Discard') %>
+    <ul>
+      <li><%= f.submit('Pick up cards', :id => 'pick_up_cards_button', :formaction => round_pick_up_cards_path(current_round_active_player.round)) %></li>
+      <li><%= f.submit('Discard', :id => 'discard_button', :formaction => round_discards_path(current_round_active_player.round)) %></li>
+    </ul>
   <% end %>
 </div>

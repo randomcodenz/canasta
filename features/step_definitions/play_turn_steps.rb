@@ -5,19 +5,19 @@ Given(/^I am viewing the round$/) do
 end
 
 Given(/^I have picked up (?:\d+) cards from stock$/) do
-  within('form#pick_up_cards') do
+  within('form#player_actions') do
     click_button('Pick up cards')
   end
 end
 
 When(/^I pick up (?:\d+) cards from stock$/) do
-  within('form#pick_up_cards') do
+  within('form#player_actions') do
     click_button('Pick up cards')
   end
 end
 
 When(/^I discard a card$/) do
-  within('form#discard') do
+  within('form#player_actions') do
     first_card = find_all('li.card').first
     first_card_name = first_card.find_field('selected_card')[:id]
     choose(first_card_name)

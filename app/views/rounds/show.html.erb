@@ -2,9 +2,6 @@
 <%= render @round.players %>
 <p id="stock">
   Stock: (<%= describe_pile_size @round.stock_size %>)
-  <%= form_for :pick_up_stock, :url => round_pick_up_cards_path(@round), :html => { :id => 'pick_up_cards' } do |f| %>
-    <%= f.submit('Pick up cards') %>
-  <% end %>
 </p>
 <p id="discard_pile">
   Discard Pile: <%= @round.discard_pile_top_card %> (<%= describe_pile_size @round.discard_pile_size %>)

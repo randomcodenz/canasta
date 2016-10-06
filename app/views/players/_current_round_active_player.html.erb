@@ -13,8 +13,9 @@
     <ul class="cards">
       <% current_round_active_player.hand.each do |card| %>
         <li class="card">
-          <%= f.check_box(:selected_cards, { :multiple => true, :id => card.to_s }, card.to_s, nil) %>
-          <%= f.label(:selected_cards, card.to_s) %>
+          <%= f.check_box(:selected_cards, { :multiple => true }, card, nil) %>
+          <% #TODO: This is shit but bending form helpers to my will is like running at a brick wall %>
+          <label for="<%= "#{:player_action}_#{:selected_cards}_#{card.to_s.downcase.gsub(' ', '_')}" %>"><%= card %></label>
         </li>
       <% end %>
     </ul>

@@ -5,5 +5,6 @@ class PlayerContext
   def initialize(index:, name:)
     @index = index
     @name = name
+    @picked_up = false
   end
 end

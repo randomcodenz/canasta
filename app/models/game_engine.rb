@@ -10,7 +10,7 @@ class GameEngine
   end
 
   def active_player
-    players && players[0]
+    players && players.first
   end
 
   def active_player_hand
@@ -129,6 +129,11 @@ class GameEngine
 
   def change_active_player!
     players.rotate!
+    reset_player_flags(players.last)
+  end
+
+  def reset_player_flags(player)
+    player.picked_up = false
   end
 
   def assert_round_started

@@ -253,6 +253,10 @@ describe GameEngine do
           expect(game_engine.active_player_hand).to include(*top_two_cards)
         end
 
+        it 'tracks that the active player has picked up' do
+          expect { game_engine.pick_up_cards }.to change { game_engine.active_player.picked_up }.from(false).to(true)
+        end
+
         it 'returns true' do
           expect(game_engine.pick_up_cards).to be true
         end
@@ -476,9 +480,13 @@ describe GameEngine do
       end
 
       it 'ends the active players turn' do
+        expect { game_engine.discard(:card => card_to_discard) }.to change { game_engine.active_player }
+      end
+
+      it 'clears the picked_up flag from the active player' do
         active_player = game_engine.active_player
-        game_engine.discard(:card => card_to_discard)
-        expect(game_engine.active_player).not_to be active_player
+        expect { game_engine.discard(:card => card_to_discard) }
+          .to change { active_player.picked_up }.from(true).to(false)
       end
 
       it 'returns true' do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PickUpCardsService do
+describe PickUpCards do
   subject(:game) do
     Game.create! do |game|
       game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
@@ -9,7 +9,7 @@ describe PickUpCardsService do
   end
   let(:round) { game.rounds.last }
 
-  subject(:service) { PickUpCardsService.new(:round => round) }
+  subject(:service) { PickUpCards.new(:round => round) }
 
   context 'when picking up cards is a valid action' do
     it 'creates a new pick up cards player action' do

@@ -1,5 +1,4 @@
-# REVIEW: Get rid of the Service suffix
-class PickUpCardsService
+class PickUpCards
   attr_reader :round, :errors
 
   def initialize(round:)

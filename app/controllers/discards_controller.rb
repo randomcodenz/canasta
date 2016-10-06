@@ -11,7 +11,11 @@ class DiscardsController < ApplicationController
   private
 
   def card_name
-    params[:selected_card]
+    selected_cards.first
+  end
+
+  def selected_cards
+    params.require(:player_action).require(:selected_cards)
   end
 
   def capture_errors(discard)

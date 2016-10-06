@@ -8,7 +8,4 @@
 </p>
 <p id="discard_pile">
   Discard Pile: <%= @round.discard_pile_top_card %> (<%= describe_pile_size @round.discard_pile_size %>)
-  <%= form_for :discard, :url => round_discards_path(@round), :html => { :id => 'discard' } do |f| %>
-    <%= f.submit('Discard') %>
-  <% end %>
 </p>

@@ -26,6 +26,7 @@ class CurrentRoundPresenter < SimpleDelegator
     game_state.players
       .sort_by(&:index)
       .map do |player|
+        player_presenter(player)
       end
   end
 
@@ -35,7 +36,7 @@ class CurrentRoundPresenter < SimpleDelegator
 
   def player_presenter(player)
     if active_player?(player)
-      CurrentRoundActivePlayerPresenter.new(:player => player)
+      CurrentRoundActivePlayerPresenter.new(:player => player, :round => self)
     else
       CurrentRoundPlayerPresenter.new(:player => player)
     end

@@ -9,14 +9,19 @@ describe CurrentRoundPresenter do
     end
   end
   let(:current_round) { game.rounds.last }
-  let(:deck) { Deck.new(:seed => Random.new_seed) }
+  let(:deck) { Deck.new(:seed => current_round.deck_seed) }
   let(:dealer) { Dealer.new(:deck => deck) }
-  let(:deal) { dealer.deal(:number_of_players => 2) }
+  let(:game_engine) do
+    GameEngine.new.tap do |engine|
+      engine.start_round(:player_names => game.players.map(&:name))
+      engine.deal(:dealer => dealer)
+    end
+  end
 
   subject(:presenter) do
     CurrentRoundPresenter.new(
       :current_round => current_round,
-      :game_state => deal
+      :game_state => game_engine
     )
   end
 
@@ -31,23 +36,22 @@ describe CurrentRoundPresenter do
   end
 
   describe '#players' do
-    it 'decorates all of the players' do
-      expect(presenter.players.to_a). to eq game.players.to_a
+    it 'decorates all of the player contexts' do
+      expect(presenter.players.to_a). to eq game_engine.players.to_a
     end
 
-    it 'wraps each player in a current round player presenter' do
-      expect(presenter.players.to_a).to all have_attributes(:class => CurrentRoundPlayerPresenter)
+    it 'wraps each player except the active in a current round player presenter' do
+      expect(presenter.players.drop(1).to_a).to all have_attributes(:class => CurrentRoundPlayerPresenter)
     end
 
-    it 'matches each player to their hand' do
-      expect(presenter.players[0].hand).to eq deal.player_hands[0]
-      expect(presenter.players[1].hand).to eq deal.player_hands[1]
+    it 'wraps the active player in a current round active player presenter' do
+      expect(presenter.players[0]).to have_attributes(:class => CurrentRoundActivePlayerPresenter)
     end
   end
 
   describe '#discard_pile_top_card' do
     it 'returns the top card of the discard pile' do
-      expect(presenter.discard_pile_top_card).to eq deal.discard_pile.last
+      expect(presenter.discard_pile_top_card).to eq game_engine.discard_pile.last
     end
   end
 

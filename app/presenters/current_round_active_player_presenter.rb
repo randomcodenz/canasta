@@ -1,6 +1,9 @@
 class CurrentRoundActivePlayerPresenter < SimpleDelegator
-  def initialize(player:)
+  attr_reader :round
+
+  def initialize(player:, round:)
     super(player)
+    @round = round
   end
 
   def hand_size

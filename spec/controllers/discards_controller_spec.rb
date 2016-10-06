@@ -9,7 +9,7 @@ describe DiscardsController, :type => :controller do
   end
   let(:round) { game.rounds.last }
   let(:round_id) { round.id }
-  let(:params) { { :round_id => round_id } }
+  let(:params) { { :round_id => round_id, :selected_card => 'Joker' } }
 
   describe 'POST #create' do
     context 'when discarding cards is a valid player action' do

@@ -15,8 +15,7 @@ class Card
   end
 
   def <=>(other)
-    # TODO : Review approach - good / bad / ugly?
-    compare_identical(other) ||
+    return 0 if identical?(other)
       compare_rank(other) ||
       compare_suit(other) ||
       compare_joker
@@ -61,7 +60,7 @@ class Card
   end
 
   def compare_rank(other)
-    if same_suit?(other)
+    unless same_rank?(other)
       my_rank = RANKS.find_index(rank)
       other_rank = RANKS.find_index(other.rank)
       my_rank <=> other_rank
@@ -69,7 +68,7 @@ class Card
   end
 
   def compare_suit(other)
-    if same_rank?(other)
+    unless same_suit?(other)
       my_suit = SUITS.find_index(suit)
       other_suit = SUITS.find_index(other.suit)
       my_suit <=> other_suit

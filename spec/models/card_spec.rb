@@ -53,6 +53,45 @@ describe Card do
         expect(sorted_cards.last(4)).to eq [joker, joker, joker, joker]
       end
     end
+
+    context 'when sorting a random collection of cards' do
+      let(:card_data) do
+        [
+          [:ten, :hearts, 9],
+          [:queen, :clubs, 4],
+          [:nine, :hearts, 10],
+          [:ace, :spades, 1],
+          [:king, :spades, 3],
+          [:three, :spades, 15],
+          [:ace, :clubs, 2],
+          [:jack, :spades, 5],
+          [:ten, :spades, 8],
+          [:three, :spades, 16],
+          [:seven, :clubs, 12],
+          [:seven, :clubs, 13],
+          [:five, :clubs, 14],
+          [:jack, :diamonds, 6],
+          [:jack, :diamonds, 7],
+          [:eight, :diamonds, 11]
+        ]
+      end
+      let(:cards) do
+        card_data.each_with_object([]) do |card_detail, array|
+          rank = card_detail[0]
+          suit = card_detail[1]
+          position = card_detail[2]
+          array << [position, Card.new(:rank => rank, :suit => suit)]
+        end
+      end
+      let(:expected_sorted_cards) { cards.sort_by(&:first).map(&:last) }
+
+      subject(:sorted_cards) { cards.map(&:last).sort }
+
+      it 'they are sorted according to rank and then suit' do
+        expect(sorted_cards).to match(expected_sorted_cards)
+        expect(sorted_cards).to contain_exactly(*expected_sorted_cards)
+      end
+    end
   end
 
   describe '#to_s' do

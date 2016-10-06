@@ -6,6 +6,11 @@ class CurrentRoundActivePlayerPresenter < SimpleDelegator
     @round = round
   end
 
+  def hand
+    # byebug
+    super.sort
+  end
+
   def hand_size
     hand.size
   end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe CreateGameService do
-  subject(:service) { CreateGameService.new }
+describe CreateGame do
+  subject(:service) { CreateGame.new }
 
   it 'creates a new game' do
     expect { service.call }.to change(Game, :count).by(1)

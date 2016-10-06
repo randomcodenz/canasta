@@ -1,6 +1,4 @@
 class GamesController < ApplicationController
-  # index, show, new, create, edit, update, destroy
-
   def index
   end
 
@@ -10,8 +8,8 @@ class GamesController < ApplicationController
   end
 
   def create
-    create_game_service = CreateGameService.new
-    game = create_game_service.call
+    create_game = CreateGame.new
+    game = create_game.call
     redirect_to game
   end
 end

@@ -11,7 +11,7 @@ class RoundsController < ApplicationController
   end
 
   def create
-    service = CreateRoundService.new(:game_id => params[:game_id])
+    service = CreateRound.new(:game_id => params[:game_id])
     round = service.call
     redirect_to round
   end

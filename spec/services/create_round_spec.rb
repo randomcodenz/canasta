@@ -1,12 +1,12 @@
 require 'rails_helper'
 require 'ostruct'
 
-describe CreateRoundService do
+describe CreateRound do
   let(:game) { Game.create! }
   let(:deck_seed) { 969 }
   let(:seed_generator) { OpenStruct.new(:new_seed => deck_seed) }
 
-  subject(:service) { CreateRoundService.new(:game_id => game.id, :seed_generator => seed_generator) }
+  subject(:service) { CreateRound.new(:game_id => game.id, :seed_generator => seed_generator) }
 
   it 'creates a new round' do
     expect { service.call }.to change(game.rounds, :count).by(1)

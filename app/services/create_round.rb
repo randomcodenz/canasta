@@ -1,6 +1,6 @@
 require 'bigint_random_seed'
 
-class CreateRoundService
+class CreateRound
   attr_reader :game_id, :seed_generator
 
   def initialize(game_id:, seed_generator: BigIntRandomSeed.itself)

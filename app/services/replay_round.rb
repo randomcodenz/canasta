@@ -1,4 +1,4 @@
-class ReplayRoundService
+class ReplayRound
   attr_reader :round, :game_engine
 
   def initialize(round:)

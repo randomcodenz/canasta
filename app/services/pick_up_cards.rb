@@ -18,7 +18,7 @@ class PickUpCards
   private
 
   def replay_round
-    replay_round_service = ReplayRoundService.new(:round => round)
+    replay_round_service = ReplayRound.new(:round => round)
     replay_round_service.call
   end
 

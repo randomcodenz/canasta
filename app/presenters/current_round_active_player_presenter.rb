@@ -15,6 +15,10 @@ class CurrentRoundActivePlayerPresenter < SimpleDelegator
     hand.size
   end
 
+  def melds
+    []
+  end
+
   def to_model
     self
   end

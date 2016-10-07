@@ -3,6 +3,10 @@ class CurrentRoundPlayerPresenter < SimpleDelegator
     super(player)
   end
 
+  def hand
+    super.sort
+  end
+
   def hand_size
     hand.size
   end

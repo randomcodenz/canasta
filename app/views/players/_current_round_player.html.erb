@@ -1,7 +1,7 @@
 <div class="player">
-  <%= current_round_player.name %> (<%= describe_pile_size current_round_player.hand_size %>)
+  <%= player.name %> (<%= describe_pile_size player.hand_size %>)
   <ul class="cards">
-    <% current_round_player.hand.each do |card| %>
+    <% player.hand.each do |card| %>
       <li class="card"><%= card %></li>
     <% end %>
   </ul>

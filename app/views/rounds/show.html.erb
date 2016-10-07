@@ -1,5 +1,5 @@
 <p id="round_number">Round <%= @round.current_round_number %></p>
-<%= render @round.players %>
+<%= render partial: @round.players, :as => 'player' %>
 <p id="stock">
   Stock: (<%= describe_pile_size @round.stock_size %>)
 </p>

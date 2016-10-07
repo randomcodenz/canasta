@@ -18,3 +18,10 @@ Feature: Meld cards
     And I have started a round
     When I view the round
     Then I can select multiple cards
+
+  Scenario: Allow a player to table a meld
+    Given I have started a game with 2 players
+    And I have started a round
+    And I am viewing the round
+    When I meld "Ace of Spades", "Ace of Diamonds", "Two of Clubs"
+    Then I can see the new meld of "Aces"

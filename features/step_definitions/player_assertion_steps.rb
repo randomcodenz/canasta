@@ -28,3 +28,7 @@ Then(/^I can select multiple cards$/) do
     expect(find_all('.card input').size).to eq find_all('.card').size
   end
 end
+
+Then(/^I can see the new meld of "([^"]*)"$/) do |meld_rank|
+  expect(find('#melds')).to have_css(".meld .#{meld_rank.singular}")
+end

@@ -21,6 +21,7 @@
     </ul>
     <ul>
       <li><%= f.submit('Pick up cards', :id => 'pick_up_cards_button', :formaction => round_pick_up_cards_path(player.round)) %></li>
+      <li><%= f.submit('Meld cards', :id => 'meld_cards_button', :formaction => round_meld_cards_path(player.round)) %></li>
       <li><%= f.submit('Discard', :id => 'discard_button', :formaction => round_discards_path(player.round)) %></li>
     </ul>
   <% end %>

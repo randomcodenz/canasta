@@ -15,7 +15,7 @@ Feature: Play a simple turn
     And I have started a round
     And I am viewing the round
     And I have picked up 2 cards from stock
-    When I discard a card
+    When I discard the first card
     Then I should see 16 cards in my hand
 
   Scenario: Track active player
@@ -29,5 +29,5 @@ Feature: Play a simple turn
     And I have started a round
     And I am viewing the round
     And I have picked up 2 cards from stock
-    When I discard a card
+    When I discard the first card
     Then I can see the active player is "Player 2"

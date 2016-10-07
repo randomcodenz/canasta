@@ -4,9 +4,9 @@ describe Dealer do
   describe '#deal' do
     let(:deck) { Deck.new(:seed => 969) }
     let(:shuffled_cards) { deck.shuffled_cards }
-    let(:dealer) { Dealer.new(:deck => deck, :number_of_players => player_count) }
+    let(:dealer) { Dealer.new(:deck => deck) }
 
-    subject(:deal) { dealer.deal }
+    subject(:deal) { dealer.deal(:number_of_players => player_count) }
 
     context 'when dealing a 2 player game' do
       let(:player_count) { 2 }

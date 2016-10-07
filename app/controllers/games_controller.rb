@@ -1,6 +1,4 @@
 class GamesController < ApplicationController
-  # index, show, new, create, edit, update, destroy
-
   def index
   end
 
@@ -10,9 +8,8 @@ class GamesController < ApplicationController
   end
 
   def create
-    game = Game.create! do |new_game|
-      new_game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
-    end
+    create_game = CreateGame.new
+    game = create_game.call
     redirect_to game
   end
 end

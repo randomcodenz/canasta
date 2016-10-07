@@ -1,14 +1,13 @@
 class Dealer
   CARDS_PER_PLAYER = { 2 => 15 }.freeze
 
-  attr_reader :deck, :number_of_players
+  attr_reader :deck
 
-  def initialize(deck:, number_of_players:)
+  def initialize(deck:)
     @deck = deck
-    @number_of_players = number_of_players
   end
 
-  def deal
+  def deal(number_of_players:)
     shuffled_cards = deck.shuffled_cards
     cards_per_player = CARDS_PER_PLAYER[number_of_players]
 

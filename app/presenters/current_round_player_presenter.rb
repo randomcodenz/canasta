@@ -1,9 +1,10 @@
 class CurrentRoundPlayerPresenter < SimpleDelegator
-  attr_reader :cards
-
-  def initialize(player:, cards:)
+  def initialize(player:)
     super(player)
-    @cards = cards
+  end
+
+  def hand_size
+    hand.size
   end
 
   def to_model

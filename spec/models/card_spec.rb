@@ -53,6 +53,45 @@ describe Card do
         expect(sorted_cards.last(4)).to eq [joker, joker, joker, joker]
       end
     end
+
+    context 'when sorting a random collection of cards' do
+      let(:card_data) do
+        [
+          [:ten, :hearts, 9],
+          [:queen, :clubs, 4],
+          [:nine, :hearts, 10],
+          [:ace, :spades, 1],
+          [:king, :spades, 3],
+          [:three, :spades, 15],
+          [:ace, :clubs, 2],
+          [:jack, :spades, 5],
+          [:ten, :spades, 8],
+          [:three, :spades, 16],
+          [:seven, :clubs, 12],
+          [:seven, :clubs, 13],
+          [:five, :clubs, 14],
+          [:jack, :diamonds, 6],
+          [:jack, :diamonds, 7],
+          [:eight, :diamonds, 11]
+        ]
+      end
+      let(:cards) do
+        card_data.each_with_object([]) do |card_detail, array|
+          rank = card_detail[0]
+          suit = card_detail[1]
+          position = card_detail[2]
+          array << [position, Card.new(:rank => rank, :suit => suit)]
+        end
+      end
+      let(:expected_sorted_cards) { cards.sort_by(&:first).map(&:last) }
+
+      subject(:sorted_cards) { cards.map(&:last).sort }
+
+      it 'they are sorted according to rank and then suit' do
+        expect(sorted_cards).to match(expected_sorted_cards)
+        expect(sorted_cards).to contain_exactly(*expected_sorted_cards)
+      end
+    end
   end
 
   describe '#to_s' do
@@ -69,6 +108,36 @@ describe Card do
 
       it 'returns Joker' do
         expect(card.to_s).to eq 'Joker'
+      end
+    end
+  end
+
+  describe '#from_s' do
+    let(:card_name) { source_card.to_s }
+
+    subject(:card) { Card.from_s(:card_name => card_name) }
+
+    context 'when the card has a suit and rank' do
+      let(:source_card) { Card.new(:rank => :queen, :suit => :hearts) }
+
+      it 'parses the rank' do
+        expect(card.rank).to eq source_card.rank
+      end
+
+      it 'parses the suit' do
+        expect(card.suit).to eq source_card.suit
+      end
+    end
+
+    context 'when the card is a joker' do
+      let(:source_card) { Card.new(:rank => :joker) }
+
+      it 'parses the rank' do
+        expect(card.rank).to eq :joker
+      end
+
+      it 'sets the suit to none' do
+        expect(card.suit).to eq :none
       end
     end
   end

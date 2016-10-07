@@ -28,6 +28,8 @@ describe GamesController, :type => :controller do
   end
 
   describe 'POST #create' do
+    # TODO: How do we change this so we can mock the service and just assert
+    # TODO: outcomes?
     it 'creates a new game' do
       expect { post :create }.to change(Game, :count).by(1)
     end

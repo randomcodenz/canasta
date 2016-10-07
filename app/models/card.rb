@@ -15,7 +15,7 @@ class Card
   end
 
   def <=>(other)
-    return 0 if identical?(other)
+    compare_identical(other) ||
       compare_rank(other) ||
       compare_suit(other) ||
       compare_joker

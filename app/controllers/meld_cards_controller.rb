@@ -1,6 +1,20 @@
 class MeldCardsController < ApplicationController
   def create
     round = Round.with_game_and_players.find(params[:round_id])
+
+    # meld = Meld.new(:round => round, :meld_cards => selected_cards)
+    # capture_errors(meld) unless meld.call
+
     redirect_to round
+  end
+
+  private
+
+  def selected_cards
+    params.require(:player_action).require(:selected_cards)
+  end
+
+  def capture_errors(discard)
+    flash[:errors] = discard.errors
   end
 end

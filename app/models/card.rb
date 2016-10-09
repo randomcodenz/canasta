@@ -5,11 +5,12 @@ class Card
     :seven, :six, :five, :four, :three, :two
   ].freeze
   JOKER = :joker
+  NO_SUIT = :none
 
   include Comparable
   attr_reader :suit, :rank
 
-  def initialize(rank:, suit: :none)
+  def initialize(rank:, suit: NO_SUIT)
     @rank = rank
     @suit = suit
   end

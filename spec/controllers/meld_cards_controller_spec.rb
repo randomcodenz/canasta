@@ -31,7 +31,7 @@ describe MeldCardsController, :type => :controller do
       end
     end
 
-    context 'when discarding is not a valid player action' do
+    context 'when melding cards is not a valid player action' do
       it 'redirects to the current round' do
         post :create, params
         expect(response).to redirect_to round

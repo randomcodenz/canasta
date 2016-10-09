@@ -6,6 +6,8 @@ module PlayerActions
       :foreign_key => 'player_action_id'
 
     def playable_action
+      cards_to_meld = meld_cards.map(&:to_card)
+      PlayableActions::Meld.new(:meld_cards => cards_to_meld)
     end
   end
 end

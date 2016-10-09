@@ -93,6 +93,12 @@ class GameEngine
     no_errors?
   end
 
+  def can_meld?(cards: nil)
+  end
+
+  def meld(cards:)
+  end
+
   private
 
   def round_started?

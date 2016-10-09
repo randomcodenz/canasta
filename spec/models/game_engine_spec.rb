@@ -620,4 +620,96 @@ describe GameEngine do
       end
     end
   end
+
+  describe '#meld' do
+    let(:cards_to_meld) do
+      [
+        Card.new(:rank => :ten, :suit => :spades),
+        Card.new(:rank => :ten, :suit => :hearts),
+        Card.new(:rank => :joker)
+      ]
+    end
+
+    context 'when the round has not been started' do
+      it 'returns false' do
+        expect(game_engine.meld(:cards => cards_to_meld)).to be false
+      end
+
+      it 'sets an error indicating why the player cannot meld' do
+        game_engine.meld(:cards => cards_to_meld)
+        expect(game_engine.errors).to eq [
+          'Round has not been started',
+          'Round has not been dealt',
+          'Player has not picked up'
+        ]
+      end
+    end
+
+    context 'when the round has not been dealt' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+      end
+
+      it 'returns false' do
+        expect(game_engine.meld(:cards => cards_to_meld)).to be false
+      end
+
+      it 'sets an error indicating why the player cannot meld' do
+        game_engine.meld(:cards => cards_to_meld)
+        expect(game_engine.errors).to eq [
+          'Round has not been dealt',
+          'Player has not picked up'
+        ]
+      end
+    end
+
+    context 'when the active player has not picked up' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+      end
+
+      it 'does not remove any cards from the active players hand' do
+        expect { game_engine.meld(:cards => cards_to_meld) }.not_to change(game_engine.active_player_hand, :size)
+      end
+
+      it 'returns false' do
+        expect(game_engine.meld(:cards => cards_to_meld)).to be false
+      end
+
+      it 'sets an error indicating why the player cannot meld' do
+        game_engine.meld(:cards => cards_to_meld)
+        expect(game_engine.errors).to eq ['Player has not picked up']
+      end
+    end
+
+    context 'when the active player has picked up' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+      end
+
+      it 'removes the cards from the active players hand' do
+        active_player_hand = game_engine.active_player_hand.dup
+        game_engine.meld(:cards => cards_to_meld)
+        melded_cards = active_player_hand - game_engine.active_player_hand
+        expect(melded_cards.sort).to eq cards_to_meld.sort
+      end
+
+      it 'creates a new player meld' do
+        game_engine.meld(:cards => cards_to_meld)
+        expect(game_engine.active_player_melds.first).to match cards_to_meld
+      end
+
+      it 'returns true' do
+        expect(game_engine.meld(:cards => cards_to_meld)).to be true
+      end
+
+      it 'clears any errors' do
+        game_engine.meld(:cards => cards_to_meld)
+        expect(game_engine.errors).to be_empty
+      end
+    end
+  end
 end

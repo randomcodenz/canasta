@@ -17,6 +17,10 @@ class GameEngine
     active_player && active_player.hand
   end
 
+  def active_player_melds
+    active_player && active_player.melds
+  end
+
   def can_start_round?
     @errors = []
     @errors << 'Round has already been started' if round_started?
@@ -83,9 +87,7 @@ class GameEngine
 
   def discard(card:)
     if can_discard?(:card => card)
-      # Only want the first instance of the card that matches
-      discard_index = active_player_hand.index(card)
-      discard_pile << active_player_hand.delete_at(discard_index)
+      discard_pile << remove_card_from_active_player_hand!(card)
 
       change_active_player!
     end
@@ -105,6 +107,15 @@ class GameEngine
   end
 
   def meld(cards:)
+    if can_meld?(:cards => cards)
+      meld_cards = cards.each_with_object([]) do |card, meld|
+        meld << remove_card_from_active_player_hand!(card)
+      end
+
+      active_player_melds << meld_cards
+    end
+
+    no_errors?
   end
 
   private
@@ -148,6 +159,12 @@ class GameEngine
 
   def reset_player_flags(player)
     player.picked_up = false
+  end
+
+  def remove_card_from_active_player_hand!(card)
+    # Only want the first instance of the card that matches
+    card_index = active_player_hand.index(card)
+    active_player_hand.delete_at(card_index)
   end
 
   def assert_round_started

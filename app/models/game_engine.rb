@@ -75,8 +75,8 @@ class GameEngine
 
     assert_round_started
     assert_round_dealt
-    @errors << 'Player has not picked up' unless active_player_picked_up?
-    @errors << "Hand does not include #{card}" unless card.nil? || errors.any? || active_player_hand_contains?(card)
+    assert_player_picked_up
+    assert_current_player_hand_contains_card(card) unless errors.any?
 
     no_errors?
   end
@@ -94,6 +94,14 @@ class GameEngine
   end
 
   def can_meld?(cards: nil)
+    @errors = []
+
+    assert_round_started
+    assert_round_dealt
+    assert_player_picked_up
+    assert_current_player_hand_contains_all_cards(cards) unless errors.any?
+
+    no_errors?
   end
 
   def meld(cards:)
@@ -148,5 +156,18 @@ class GameEngine
 
   def assert_round_dealt
     @errors << 'Round has not been dealt' unless round_dealt?
+  end
+
+  def assert_player_picked_up
+    @errors << 'Player has not picked up' unless active_player_picked_up?
+  end
+
+  def assert_current_player_hand_contains_card(card)
+    @errors << "Hand does not include #{card}" unless card.nil? || active_player_hand_contains?(card)
+  end
+
+  def assert_current_player_hand_contains_all_cards(cards)
+    cards ||= []
+    cards.each { |card| assert_current_player_hand_contains_card(card) }
   end
 end

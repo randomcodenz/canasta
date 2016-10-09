@@ -9,9 +9,9 @@ class Meld
 
   def call
     game_engine = replay_round
-    cards = card_names.map { |card_name| Card.from_s(:card_name => card_name) }
 
-    # meld(cards) if game_engine.can_meld?(:cards => cards)
+    cards = card_names.map { |card_name| Card.from_s(:card_name => card_name) }
+    meld_cards(cards) if game_engine.can_meld?(:cards => cards)
     collect_game_errors(game_engine)
 
     no_errors?
@@ -24,8 +24,10 @@ class Meld
     replay_round_service.call
   end
 
-  def meld(cards)
-    # round.player_actions << PlayerActions::Meld.new(:card_name => card.to_s)
+  def meld_cards(cards)
+    meld = PlayerActions::Meld.new
+    meld.meld_cards << cards.map { |card| PlayerActionCard.from_card(:card => card) }
+    round.player_actions << meld
   end
 
   def collect_game_errors(game_engine)

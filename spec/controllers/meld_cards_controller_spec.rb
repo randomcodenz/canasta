@@ -9,7 +9,7 @@ describe MeldCardsController, :type => :controller do
   end
   let(:round) { game.rounds.last }
   let(:round_id) { round.id }
-  let(:selected_cards) { ['Joker', 'Ace of Diamonds', 'Ace of Hearts'] }
+  let(:selected_cards) { ['Joker', 'Ten of Diamonds', 'Ten of Hearts'] }
   let(:params) { { :round_id => round_id, :player_action => { :selected_cards => selected_cards } } }
 
   describe 'POST #create' do
@@ -20,10 +20,10 @@ describe MeldCardsController, :type => :controller do
         expect { post :create, params }.to change(PlayerAction, :count).by(1)
       end
 
-      it 'creates a new "meld" player action' # do
-        # post :create, params
-        # expect(round.player_actions.last.type).to eq PlayerActions::Meld.name
-      # end
+      it 'creates a new "meld" player action' do
+        post :create, params
+        expect(round.player_actions.last.type).to eq PlayerActions::Meld.name
+      end
 
       it 'redirects to the current round' do
         post :create, params
@@ -32,8 +32,9 @@ describe MeldCardsController, :type => :controller do
     end
 
     context 'when melding cards is not a valid player action' do
+      before { post :create, params }
+
       it 'redirects to the current round' do
-        post :create, params
         expect(response).to redirect_to round
       end
 

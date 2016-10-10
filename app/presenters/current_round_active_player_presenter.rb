@@ -7,7 +7,6 @@ class CurrentRoundActivePlayerPresenter < SimpleDelegator
   end
 
   def hand
-    # byebug
     super.sort
   end
 

@@ -21,3 +21,15 @@ end
 Then(/^I can see the active player is "([^"]*)"$/) do |player_name|
   expect(find('.active_player')).to have_content player_name
 end
+
+Then(/^I can select multiple cards$/) do
+  within('form#player_actions') do
+    expect(find_all('.card input')).to all_the_things(match_xpath('//input[@type="checkbox"]'))
+    expect(find_all('.card input').size).to eq find_all('.card').size
+  end
+end
+
+Then(/^I can see the new meld of "([^"]*)"$/) do |meld_rank|
+  meld_cards = find_all('.meld_cards').first
+  expect(meld_cards.text).to have_content(meld_rank.singularize)
+end

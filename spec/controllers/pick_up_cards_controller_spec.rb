@@ -30,7 +30,7 @@ describe PickUpCardsController, :type => :controller do
 
     context 'when picking up cards is not a valid player action' do
       it 'redirects to the current round'
-      it 'shows an error message indicating the player action was invalid'
+      it 'shows an error message indicating why picking up cards was invalid'
     end
   end
 end

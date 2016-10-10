@@ -8,5 +8,6 @@ Rails.application.routes.draw do
   resources :rounds, :only => [:show] do
     resource :pick_up_cards, :only => [:create]
     resource :discards, :only => [:create]
+    resource :meld_cards, :only => [:create]
   end
 end

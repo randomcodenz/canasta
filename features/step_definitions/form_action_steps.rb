@@ -26,3 +26,20 @@ When(/^I discard the first card$/) do
     click_button('Discard')
   end
 end
+
+When(/^I meld "([^"]*)", "([^"]*)", "([^"]*)"$/) do |card1, card2, card3|
+  within('form#player_actions') do
+    card_names = [card1, card2, card3]
+
+    cards = find_all('.card').select do |card|
+      card_names.any? { |card_name| card.has_content?(card_name) }
+    end
+
+    cards.each do |card|
+      card_id = card.find_field('player_action[selected_cards][]')[:id]
+      check(card_id)
+    end
+
+    click_button('Meld')
+  end
+end

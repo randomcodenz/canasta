@@ -17,6 +17,10 @@ class GameEngine
     active_player && active_player.hand
   end
 
+  def active_player_melds
+    active_player && active_player.melds
+  end
+
   def can_start_round?
     @errors = []
     @errors << 'Round has already been started' if round_started?
@@ -75,19 +79,40 @@ class GameEngine
 
     assert_round_started
     assert_round_dealt
-    @errors << 'Player has not picked up' unless active_player_picked_up?
-    @errors << "Hand does not include #{card}" unless card.nil? || errors.any? || active_player_hand_contains?(card)
+    assert_player_picked_up
+    assert_current_player_hand_contains_card(card) unless errors.any?
 
     no_errors?
   end
 
   def discard(card:)
     if can_discard?(:card => card)
-      # Only want the first instance of the card that matches
-      discard_index = active_player_hand.index(card)
-      discard_pile << active_player_hand.delete_at(discard_index)
+      discard_pile << remove_card_from_active_player_hand!(card)
 
       change_active_player!
+    end
+
+    no_errors?
+  end
+
+  def can_meld?(cards: nil)
+    @errors = []
+
+    assert_round_started
+    assert_round_dealt
+    assert_player_picked_up
+    assert_current_player_hand_contains_all_cards(cards) unless errors.any?
+
+    no_errors?
+  end
+
+  def meld(cards:)
+    if can_meld?(:cards => cards)
+      meld_cards = cards.each_with_object([]) do |card, meld|
+        meld << remove_card_from_active_player_hand!(card)
+      end
+
+      active_player_melds << meld_cards
     end
 
     no_errors?
@@ -136,11 +161,30 @@ class GameEngine
     player.picked_up = false
   end
 
+  def remove_card_from_active_player_hand!(card)
+    # Only want the first instance of the card that matches
+    card_index = active_player_hand.index(card)
+    active_player_hand.delete_at(card_index)
+  end
+
   def assert_round_started
     @errors << 'Round has not been started' unless round_started?
   end
 
   def assert_round_dealt
     @errors << 'Round has not been dealt' unless round_dealt?
+  end
+
+  def assert_player_picked_up
+    @errors << 'Player has not picked up' unless active_player_picked_up?
+  end
+
+  def assert_current_player_hand_contains_card(card)
+    @errors << "Hand does not include #{card}" unless card.nil? || active_player_hand_contains?(card)
+  end
+
+  def assert_current_player_hand_contains_all_cards(cards)
+    cards ||= []
+    cards.each { |card| assert_current_player_hand_contains_card(card) }
   end
 end

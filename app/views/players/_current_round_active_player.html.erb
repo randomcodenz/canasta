@@ -24,19 +24,6 @@
       <li><%= f.submit('Meld cards', :id => 'meld_cards_button', :formaction => round_meld_cards_path(player.round)) %></li>
       <li><%= f.submit('Discard', :id => 'discard_button', :formaction => round_discards_path(player.round)) %></li>
     </ul>
-    <% if player.melds.any? %>
-      <ul class="melds">
-        <% player.melds.each do |meld| %>
-          <li class="meld">
-            <%= meld.description %>
-            <ul class="meld_cards">
-              <% meld.cards.each do |card| %>
-                <li><%= card %></li>
-              <% end %>
-            </ul>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
   <% end %>
+  <%= render :partial => 'melds', :locals => { :player_name => player.name, :melds => player.melds} %>
 </div>

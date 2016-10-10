@@ -7,16 +7,11 @@ class CurrentRoundActivePlayerPresenter < SimpleDelegator
   end
 
   def hand
-    # byebug
     super.sort
   end
 
   def hand_size
     hand.size
-  end
-
-  def melds
-    []
   end
 
   def to_model

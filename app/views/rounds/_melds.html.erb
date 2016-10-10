@@ -1,0 +1,14 @@
+<% if melds.any? %>
+  <div class="melds">
+    <b><%= player_name %> Melds</b>
+    <% melds.each do |meld| %>
+      <div class="meld">
+        <ul class="meld_cards">
+          <% meld.each do |card| %>
+            <li><%= card %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -23,5 +23,6 @@ Feature: Meld cards
     Given I have started a game with 2 players
     And I have started a round
     And I am viewing the round
+    And I have picked up 2 cards from stock
     When I meld "Ace of Spades", "Ace of Diamonds", "Two of Clubs"
     Then I can see the new meld of "Aces"

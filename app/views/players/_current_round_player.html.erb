@@ -5,4 +5,5 @@
       <li class="card"><%= card %></li>
     <% end %>
   </ul>
+  <%= render :partial => 'melds', :locals => { :player_name => player.name, :melds => player.melds} %>
 </div>

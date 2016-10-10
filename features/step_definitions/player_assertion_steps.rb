@@ -30,5 +30,6 @@ Then(/^I can select multiple cards$/) do
 end
 
 Then(/^I can see the new meld of "([^"]*)"$/) do |meld_rank|
-  expect(find('#melds')).to have_css(".meld .#{meld_rank.singular}")
+  meld_cards = find_all('.meld_cards').first
+  expect(meld_cards.text).to have_content(meld_rank.singularize)
 end

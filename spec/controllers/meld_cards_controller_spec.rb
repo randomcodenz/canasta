@@ -38,7 +38,7 @@ describe MeldCardsController, :type => :controller do
         expect(response).to redirect_to round
       end
 
-      it 'shows an error message indicating the player action was invalid' do
+      it 'shows an error message indicating why the meld was invalid' do
         expect(flash[:errors]).to be_present
       end
     end

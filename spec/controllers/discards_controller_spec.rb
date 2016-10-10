@@ -31,8 +31,15 @@ describe DiscardsController, :type => :controller do
     end
 
     context 'when discarding is not a valid player action' do
-      it 'redirects to the current round'
-      it 'shows an error message indicating the player action was invalid'
+      before { post :create, params }
+
+      it 'redirects to the current round' do
+        expect(response).to redirect_to round
+      end
+
+      it 'shows an error message indicating the discard was invalid' do
+        expect(flash[:errors]).to be_present
+      end
     end
   end
 end

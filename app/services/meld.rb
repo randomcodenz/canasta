@@ -10,6 +10,7 @@ class Meld
   def call
     game_engine = replay_round
 
+    # REVIEW: Transacion boundary??
     cards = card_names.map { |card_name| Card.from_s(:card_name => card_name) }
     meld_cards(cards) if game_engine.can_meld?(:cards => cards)
     collect_game_errors(game_engine)

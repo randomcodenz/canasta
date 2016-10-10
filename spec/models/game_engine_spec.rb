@@ -498,6 +498,25 @@ describe GameEngine do
         expect(game_engine.errors).to be_empty
       end
     end
+
+    context 'when the active player discards and there are no cards left in stock' do
+      let(:card_to_discard) { game_engine.active_player_hand.first }
+      before do
+        # Play the game until stock is empty and last player is ready to discard
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+        until game_engine.stock.empty?
+          game_engine.discard(:card => game_engine.active_player_hand.first)
+          game_engine.pick_up_cards
+        end
+      end
+
+      it 'changes round over to true' do
+        expect { game_engine.discard(:card => card_to_discard) }
+          .to change { game_engine.round_over? }.from(false).to(true)
+      end
+    end
   end
 
   describe '#can_meld?' do

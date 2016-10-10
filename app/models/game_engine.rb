@@ -1,6 +1,10 @@
 class GameEngine
   attr_reader :errors, :players, :discard_pile, :stock
 
+  def round_over?
+    active_player_picked_up? ? false : stock.empty?
+  end
+
   def number_of_players
     players.size if players
   end

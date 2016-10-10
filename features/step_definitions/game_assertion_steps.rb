@@ -29,4 +29,5 @@ end
 
 Then(/^I can see the round is over$/) do
   expect(page).to have_css('#round_over')
+  expect(page).to have_css('form#start_round')
 end

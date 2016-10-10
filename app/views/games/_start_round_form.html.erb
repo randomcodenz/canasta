@@ -1,4 +1,4 @@
-<%= form_for :round, :url => game_rounds_path(@game) do |f| %>
+<%= form_for :round, :url => game_rounds_path(game), :html => { :id => 'start_round' } do |f| %>
   <p>
     <%= f.submit('Start round') %>
   </p>

@@ -11,7 +11,7 @@ Feature: Meld cards
     Acceptance criteria:
     - Player can select card in their hand to form the meld
     - Player can table the meld if it is valid
-    - Player is notified if the meld sis not valid
+    - Player is notified if the meld is not valid
 
   Scenario: Allow a player to select multiple cards
     Given I have started a game with 2 players

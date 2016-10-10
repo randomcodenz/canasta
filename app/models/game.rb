@@ -21,8 +21,6 @@ class Game < ActiveRecord::Base
     PlayableActions::StartRound.new(:player_names => player_names)
   end
 
-  private
-
   def player_names
     players.sort_by(&:id).map(&:name)
   end

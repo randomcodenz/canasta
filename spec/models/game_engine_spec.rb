@@ -14,6 +14,19 @@ shared_context 'validate operation' do |game_engine_method|
   end
 end
 
+shared_context 'prepare to end round' do
+  before do
+    # Play the game until stock is empty and last player is ready to discard
+    game_engine.start_round(:player_names => player_names)
+    game_engine.deal(:dealer => dealer)
+    game_engine.pick_up_cards
+    until game_engine.stock.empty?
+      game_engine.discard(:card => game_engine.active_player_hand.first)
+      game_engine.pick_up_cards
+    end
+  end
+end
+
 shared_examples 'a valid operation' do |game_engine_method|
   include_context 'validate operation', game_engine_method
 
@@ -48,6 +61,7 @@ describe GameEngine do
   let(:player_picked_up) { 'Player has already picked up' }
   let(:player_not_picked_up) { 'Player has not picked up' }
   let(:hand_missing_card) { "Hand does not include #{card_not_held}" }
+  let(:round_ended) { 'Round has ended' }
   let(:player_names) { ['Player 1', 'Player 2'] }
   let(:number_of_players) { player_names.size }
   let(:deck) { Deck.new(:seed => 959) }
@@ -204,6 +218,16 @@ describe GameEngine do
       it 'returns false'
       it 'sets an error indicating why the player cannot pick up'
     end
+
+    context 'when the round is over' do
+      include_context 'prepare to end round'
+
+      before { game_engine.discard(:card => game_engine.active_player_hand.first) }
+
+      it_behaves_like 'an invalid operation', :can_pick_up_cards? do
+        let(:expected_errors) { [round_ended] }
+      end
+    end
   end
 
   describe '#pick_up_cards' do
@@ -261,6 +285,16 @@ describe GameEngine do
       it 'does not add any cards to the players hand'
       it 'returns false'
       it 'sets an error indicating why the player cannot pick up'
+    end
+
+    context 'when the round is over' do
+      include_context 'prepare to end round'
+
+      before { game_engine.discard(:card => game_engine.active_player_hand.first) }
+
+      it_behaves_like 'an invalid operation', :pick_up_cards do
+        let(:expected_errors) { [round_ended] }
+      end
     end
   end
 
@@ -411,17 +445,9 @@ describe GameEngine do
     end
 
     context 'when the active player discards and there are no cards left in stock' do
+      include_context 'prepare to end round'
+
       let(:card_to_discard) { game_engine.active_player_hand.first }
-      before do
-        # Play the game until stock is empty and last player is ready to discard
-        game_engine.start_round(:player_names => player_names)
-        game_engine.deal(:dealer => dealer)
-        game_engine.pick_up_cards
-        until game_engine.stock.empty?
-          game_engine.discard(:card => game_engine.active_player_hand.first)
-          game_engine.pick_up_cards
-        end
-      end
 
       it 'changes round over to true' do
         expect { game_engine.discard(:card => card_to_discard) }

@@ -1,6 +1,53 @@
 require 'rails_helper'
 
+shared_context 'validate operation' do |game_engine_method|
+  let(:method) { game_engine_method }
+  let(:method_args) { [] }
+  let(:method_keyword_args) { {} }
+
+  def call_game_engine_method
+    if method_keyword_args.empty?
+      game_engine.send(method, *method_args)
+    else
+      game_engine.send(method, *method_args, **method_keyword_args)
+    end
+  end
+end
+
+shared_examples 'a valid operation' do |game_engine_method|
+  include_context 'validate operation', game_engine_method
+
+  it 'returns true' do
+    expect(call_game_engine_method).to be true
+  end
+
+  it 'clears any errors' do
+    call_game_engine_method
+    expect(game_engine.errors).to be_empty
+  end
+end
+
+shared_examples 'an invalid operation' do |game_engine_method|
+  include_context 'validate operation', game_engine_method
+
+  it 'returns false' do
+    expect(call_game_engine_method).to be false
+  end
+
+  it 'sets one or more errors describing why the operation is invalid' do
+    call_game_engine_method
+    expect(game_engine.errors).to eq expected_errors
+  end
+end
+
 describe GameEngine do
+  let(:round_already_started) { 'Round has already been started' }
+  let(:round_not_started) { 'Round has not been started' }
+  let(:round_already_dealt) { 'Round has already been dealt' }
+  let(:round_not_dealt) { 'Round has not been dealt' }
+  let(:player_picked_up) { 'Player has already picked up' }
+  let(:player_not_picked_up) { 'Player has not picked up' }
+  let(:hand_missing_card) { "Hand does not include #{card_not_held}" }
   let(:player_names) { ['Player 1', 'Player 2'] }
   let(:number_of_players) { player_names.size }
   let(:deck) { Deck.new(:seed => 959) }
@@ -12,26 +59,14 @@ describe GameEngine do
 
   describe '#can_start_round?' do
     context 'when a round has not been started' do
-      it 'returns true' do
-        expect(game_engine.can_start_round?).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.can_start_round?
-        expect(game_engine.errors).to be_empty
-      end
+      it_behaves_like 'a valid operation', :can_start_round?
     end
 
     context 'when a round has been started' do
       before { game_engine.start_round(:player_names => player_names) }
 
-      it 'returns false' do
-        expect(game_engine.can_start_round?).to be false
-      end
-
-      it 'sets an error indicating a round has already been started' do
-        game_engine.can_start_round?
-        expect(game_engine.errors).to eq ['Round has already been started']
+      it_behaves_like 'an invalid operation', :can_start_round? do
+        let(:expected_errors) { [round_already_started] }
       end
     end
   end
@@ -43,13 +78,8 @@ describe GameEngine do
         expect(game_engine.number_of_players).to eq number_of_players
       end
 
-      it 'returns true' do
-        expect(game_engine.start_round(:player_names => player_names)).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.start_round(:player_names => player_names)
-        expect(game_engine.errors).to be_empty
+      it_behaves_like 'a valid operation', :start_round do
+        let(:method_keyword_args) { { :player_names => player_names } }
       end
     end
 
@@ -63,40 +93,24 @@ describe GameEngine do
         expect(game_engine.number_of_players).to eq number_of_players
       end
 
-      it 'returns false' do
-        expect(game_engine.start_round(:player_names => new_player_names)).to be false
-      end
-
-      it 'sets an error indicating a round has already been started' do
-        game_engine.start_round(:player_names => new_player_names)
-        expect(game_engine.errors).to eq ['Round has already been started']
+      it_behaves_like 'an invalid operation', :start_round do
+        let(:method_keyword_args) { { :player_names => new_player_names } }
+        let(:expected_errors) { [round_already_started] }
       end
     end
   end
 
   describe '#can_deal?' do
     context 'when the round has not been started' do
-      it 'returns false' do
-        expect(game_engine.can_deal?).to be false
-      end
-
-      it 'sets an error indicating why it cannot deal' do
-        game_engine.can_deal?
-        expect(game_engine.errors).to eq ['Round has not been started']
+      it_behaves_like 'an invalid operation', :can_deal? do
+        let(:expected_errors) { [round_not_started] }
       end
     end
 
     context 'when the round has not been dealt' do
       before { game_engine.start_round(:player_names => player_names) }
 
-      it 'returns true' do
-        expect(game_engine.can_deal?).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.can_deal?
-        expect(game_engine.errors).to be_empty
-      end
+      it_behaves_like 'a valid operation', :can_deal?
     end
 
     context 'when the round has already been dealt' do
@@ -105,13 +119,8 @@ describe GameEngine do
         game_engine.deal(:dealer => dealer)
       end
 
-      it 'returns false' do
-        expect(game_engine.can_deal?).to be false
-      end
-
-      it 'sets an error indicating why it cannot deal' do
-        game_engine.can_deal?
-        expect(game_engine.errors).to eq ['Round has already been dealt']
+      it_behaves_like 'an invalid operation', :can_deal? do
+        let(:expected_errors) { [round_already_dealt] }
       end
     end
   end
@@ -125,13 +134,8 @@ describe GameEngine do
         expect(game_engine.player_hands.size).to eq number_of_players
       end
 
-      it 'returns true' do
-        expect(game_engine.deal(:dealer => dealer)).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.deal(:dealer => dealer)
-        expect(game_engine.errors).to be_empty
+      it_behaves_like 'a valid operation', :deal do
+        let(:method_keyword_args) { { :dealer => dealer } }
       end
     end
 
@@ -147,26 +151,17 @@ describe GameEngine do
         expect(game_engine.player_hands).to contain_exactly(*player_hands)
       end
 
-      it 'returns false' do
-        expect(game_engine.deal(:dealer => dealer)).to be false
-      end
-
-      it 'sets an error indicating why it cannot deal' do
-        game_engine.deal(:dealer => dealer)
-        expect(game_engine.errors).to eq ['Round has already been dealt']
+      it_behaves_like 'an invalid operation', :deal do
+        let(:method_keyword_args) { { :dealer => dealer } }
+        let(:expected_errors) { [round_already_dealt] }
       end
     end
   end
 
   describe '#can_pick_up_cards?' do
     context 'when the round has not been started' do
-      it 'returns false' do
-        expect(game_engine.can_pick_up_cards?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot pick up' do
-        game_engine.can_pick_up_cards?
-        expect(game_engine.errors).to eq ['Round has not been started', 'Round has not been dealt']
+      it_behaves_like 'an invalid operation', :can_pick_up_cards? do
+        let(:expected_errors) { [round_not_started, round_not_dealt] }
       end
     end
 
@@ -175,13 +170,8 @@ describe GameEngine do
         game_engine.start_round(:player_names => player_names)
       end
 
-      it 'returns false' do
-        expect(game_engine.can_pick_up_cards?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot pick up' do
-        game_engine.can_pick_up_cards?
-        expect(game_engine.errors).to eq ['Round has not been dealt']
+      it_behaves_like 'an invalid operation', :can_pick_up_cards? do
+        let(:expected_errors) { [round_not_dealt] }
       end
     end
 
@@ -193,14 +183,7 @@ describe GameEngine do
         game_engine.deal(:dealer => dealer)
       end
 
-      it 'returns true' do
-        expect(game_engine.can_pick_up_cards?).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.can_pick_up_cards?
-        expect(game_engine.errors).to be_empty
-      end
+      it_behaves_like 'a valid operation', :can_pick_up_cards?
     end
 
     context 'when the current player has picked up from stock' do
@@ -212,13 +195,8 @@ describe GameEngine do
         game_engine.pick_up_cards
       end
 
-      it 'returns false' do
-        expect(game_engine.can_pick_up_cards?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot pick up' do
-        game_engine.can_pick_up_cards?
-        expect(game_engine.errors).to eq ['Player has already picked up']
+      it_behaves_like 'an invalid operation', :can_pick_up_cards? do
+        let(:expected_errors) { [player_picked_up] }
       end
     end
 
@@ -254,17 +232,11 @@ describe GameEngine do
         end
 
         it 'tracks that the active player has picked up' do
-          expect { game_engine.pick_up_cards }.to change { game_engine.active_player.picked_up }.from(false).to(true)
+          expect { game_engine.pick_up_cards }
+            .to change { game_engine.active_player.picked_up }.from(false).to(true)
         end
 
-        it 'returns true' do
-          expect(game_engine.pick_up_cards).to be true
-        end
-
-        it 'clears any errors' do
-          game_engine.pick_up_cards
-          expect(game_engine.errors).to be_empty
-        end
+        it_behaves_like 'a valid operation', :pick_up_cards
       end
     end
 
@@ -279,13 +251,8 @@ describe GameEngine do
         expect { game_engine.pick_up_cards }.not_to change(game_engine.active_player_hand, :size)
       end
 
-      it 'returns false' do
-        expect(game_engine.pick_up_cards).to be false
-      end
-
-      it 'sets an error indicating why the player cannot pick up' do
-        game_engine.pick_up_cards
-        expect(game_engine.errors).to eq ['Player has already picked up']
+      it_behaves_like 'an invalid operation', :pick_up_cards do
+        let(:expected_errors) { [player_picked_up] }
       end
     end
 
@@ -299,17 +266,8 @@ describe GameEngine do
 
   describe '#can_discard?' do
     context 'when the round has not been started' do
-      it 'returns false' do
-        expect(game_engine.can_discard?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot discard' do
-        game_engine.can_discard?
-        expect(game_engine.errors).to eq [
-          'Round has not been started',
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :can_discard? do
+        let(:expected_errors) { [round_not_started, round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -318,16 +276,8 @@ describe GameEngine do
         game_engine.start_round(:player_names => player_names)
       end
 
-      it 'returns false' do
-        expect(game_engine.can_discard?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot discard' do
-        game_engine.can_discard?
-        expect(game_engine.errors).to eq [
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :can_discard? do
+        let(:expected_errors) { [round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -337,13 +287,8 @@ describe GameEngine do
         game_engine.deal(:dealer => dealer)
       end
 
-      it 'returns false' do
-        expect(game_engine.can_discard?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot discard' do
-        game_engine.can_discard?
-        expect(game_engine.errors).to eq ['Player has not picked up']
+      it_behaves_like 'an invalid operation', :can_discard? do
+        let(:expected_errors) { [player_not_picked_up] }
       end
     end
 
@@ -354,18 +299,12 @@ describe GameEngine do
         game_engine.pick_up_cards
       end
 
-      it 'returns true' do
-        expect(game_engine.can_discard?).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.can_discard?
-        expect(game_engine.errors).to be_empty
-      end
+      it_behaves_like 'a valid operation', :can_discard?
     end
 
     context 'when the current players hand does not include the card' do
       let(:card_to_discard) { Card.new(:rank => :seven, :suit => :clubs) }
+      let(:card_not_held) { card_to_discard }
 
       before do
         game_engine.start_round(:player_names => player_names)
@@ -373,13 +312,9 @@ describe GameEngine do
         game_engine.pick_up_cards
       end
 
-      it 'returns false' do
-        expect(game_engine.can_discard?(:card => card_to_discard)).to be false
-      end
-
-      it 'sets an error indicating why the player cannot discard' do
-        game_engine.can_discard?(:card => card_to_discard)
-        expect(game_engine.errors).to eq ["Hand does not include #{card_to_discard}"]
+      it_behaves_like 'an invalid operation', :can_discard? do
+        let(:method_keyword_args) { { :card => card_to_discard } }
+        let(:expected_errors) { [hand_missing_card] }
       end
     end
   end
@@ -388,21 +323,13 @@ describe GameEngine do
     let(:card_to_discard) { player_one_hand[1] }
 
     context 'when the round has not been started' do
-      it 'returns false' do
-        expect(game_engine.discard(:card => card_to_discard)).to be false
-      end
-
       it 'does not change the current player' do
         expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.active_player, :object_id)
       end
 
-      it 'sets an error indicating why the player cannot discard' do
-        game_engine.discard(:card => card_to_discard)
-        expect(game_engine.errors).to eq [
-          'Round has not been started',
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :discard do
+        let(:method_keyword_args) { { :card => card_to_discard } }
+        let(:expected_errors) { [round_not_started, round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -411,20 +338,13 @@ describe GameEngine do
         game_engine.start_round(:player_names => player_names)
       end
 
-      it 'returns false' do
-        expect(game_engine.discard(:card => card_to_discard)).to be false
-      end
-
       it 'does not change the active player' do
         expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.active_player, :object_id)
       end
 
-      it 'sets an error indicating why the player cannot discard' do
-        game_engine.discard(:card => card_to_discard)
-        expect(game_engine.errors).to eq [
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :discard do
+        let(:method_keyword_args) { { :card => card_to_discard } }
+        let(:expected_errors) { [round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -446,13 +366,9 @@ describe GameEngine do
         expect { game_engine.discard(:card => card_to_discard) }.not_to change(game_engine.active_player, :object_id)
       end
 
-      it 'returns false' do
-        expect(game_engine.discard(:card => card_to_discard)).to be false
-      end
-
-      it 'sets an error indicating why the player cannot discard' do
-        game_engine.discard(:card => card_to_discard)
-        expect(game_engine.errors).to eq ['Player has not picked up']
+      it_behaves_like 'an invalid operation', :discard do
+        let(:method_keyword_args) { { :card => card_to_discard } }
+        let(:expected_errors) { [player_not_picked_up] }
       end
     end
 
@@ -489,13 +405,8 @@ describe GameEngine do
           .to change { active_player.picked_up }.from(true).to(false)
       end
 
-      it 'returns true' do
-        expect(game_engine.discard(:card => card_to_discard)).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.discard(:card => card_to_discard)
-        expect(game_engine.errors).to be_empty
+      it_behaves_like 'a valid operation', :discard do
+        let(:method_keyword_args) { { :card => card_to_discard } }
       end
     end
 
@@ -521,17 +432,8 @@ describe GameEngine do
 
   describe '#can_meld?' do
     context 'when the round has not been started' do
-      it 'returns false' do
-        expect(game_engine.can_meld?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.can_meld?
-        expect(game_engine.errors).to eq [
-          'Round has not been started',
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:expected_errors) { [round_not_started, round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -540,16 +442,8 @@ describe GameEngine do
         game_engine.start_round(:player_names => player_names)
       end
 
-      it 'returns false' do
-        expect(game_engine.can_meld?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.can_meld?
-        expect(game_engine.errors).to eq [
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:expected_errors) { [round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -559,13 +453,8 @@ describe GameEngine do
         game_engine.deal(:dealer => dealer)
       end
 
-      it 'returns false' do
-        expect(game_engine.can_meld?).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.can_meld?
-        expect(game_engine.errors).to eq ['Player has not picked up']
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:expected_errors) { [player_not_picked_up] }
       end
     end
 
@@ -576,14 +465,7 @@ describe GameEngine do
         game_engine.pick_up_cards
       end
 
-      it 'returns true' do
-        expect(game_engine.can_meld?).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.can_meld?
-        expect(game_engine.errors).to be_empty
-      end
+      it_behaves_like 'a valid operation', :can_meld?
     end
 
     context 'when the current players hand does not include any of the  cards' do
@@ -602,13 +484,9 @@ describe GameEngine do
         game_engine.pick_up_cards
       end
 
-      it 'returns false' do
-        expect(game_engine.can_meld?(:cards => cards_to_meld)).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.can_meld?(:cards => cards_to_meld)
-        expect(game_engine.errors).to eq ["Hand does not include #{card_not_held}"]
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:method_keyword_args) { { :cards => cards_to_meld } }
+        let(:expected_errors) { [hand_missing_card] }
       end
     end
 
@@ -628,14 +506,12 @@ describe GameEngine do
         game_engine.pick_up_cards
       end
 
-      it 'returns false' do
-        expect(game_engine.can_meld?(:cards => cards_to_meld)).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.can_meld?(:cards => cards_to_meld)
-        error_message = "#{cards_to_meld[0]}, #{cards_to_meld[1]} and #{cards_to_meld[2]} are not a valid meld"
-        expect(game_engine.errors).to eq [error_message]
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:method_keyword_args) { { :cards => cards_to_meld } }
+        let(:expected_errors) do
+          error_message = "#{cards_to_meld[0]}, #{cards_to_meld[1]} and #{cards_to_meld[2]} are not a valid meld"
+          [error_message]
+        end
       end
     end
   end
@@ -650,17 +526,8 @@ describe GameEngine do
     end
 
     context 'when the round has not been started' do
-      it 'returns false' do
-        expect(game_engine.meld(:cards => cards_to_meld)).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.meld(:cards => cards_to_meld)
-        expect(game_engine.errors).to eq [
-          'Round has not been started',
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:expected_errors) { [round_not_started, round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -669,16 +536,8 @@ describe GameEngine do
         game_engine.start_round(:player_names => player_names)
       end
 
-      it 'returns false' do
-        expect(game_engine.meld(:cards => cards_to_meld)).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.meld(:cards => cards_to_meld)
-        expect(game_engine.errors).to eq [
-          'Round has not been dealt',
-          'Player has not picked up'
-        ]
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:expected_errors) { [round_not_dealt, player_not_picked_up] }
       end
     end
 
@@ -692,13 +551,8 @@ describe GameEngine do
         expect { game_engine.meld(:cards => cards_to_meld) }.not_to change(game_engine.active_player_hand, :size)
       end
 
-      it 'returns false' do
-        expect(game_engine.meld(:cards => cards_to_meld)).to be false
-      end
-
-      it 'sets an error indicating why the player cannot meld' do
-        game_engine.meld(:cards => cards_to_meld)
-        expect(game_engine.errors).to eq ['Player has not picked up']
+      it_behaves_like 'an invalid operation', :can_meld? do
+        let(:expected_errors) { [player_not_picked_up] }
       end
     end
 
@@ -721,13 +575,8 @@ describe GameEngine do
         expect(game_engine.active_player_melds.first).to match cards_to_meld
       end
 
-      it 'returns true' do
-        expect(game_engine.meld(:cards => cards_to_meld)).to be true
-      end
-
-      it 'clears any errors' do
-        game_engine.meld(:cards => cards_to_meld)
-        expect(game_engine.errors).to be_empty
+      it_behaves_like 'a valid operation', :meld do
+        let(:method_keyword_args) { { :cards => cards_to_meld } }
       end
     end
   end

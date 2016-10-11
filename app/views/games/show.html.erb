@@ -1,4 +1,2 @@
 <%= render @game.players %>
-<% if @game.round_over? %>
-  <%= render 'start_round_form' %>
-<% end %>
+<%= render 'start_round_form' if @game.round_over? %>

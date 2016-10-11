@@ -10,6 +10,10 @@ class CurrentRoundPresenter < SimpleDelegator
     game.rounds.count
   end
 
+  def round_over?
+    game_state.round_over?
+  end
+
   def discard_pile_top_card
     game_state.discard_pile.last
   end
@@ -35,7 +39,7 @@ class CurrentRoundPresenter < SimpleDelegator
   attr_reader :game_state
 
   def player_presenter(player)
-    if active_player?(player)
+    if active_player?(player) && !round_over?
       CurrentRoundActivePlayerPresenter.new(:player => player, :round => self)
     else
       CurrentRoundPlayerPresenter.new(:player => player)

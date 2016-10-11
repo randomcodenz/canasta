@@ -40,12 +40,28 @@ describe CurrentRoundPresenter do
       expect(presenter.players.to_a). to eq game_engine.players.to_a
     end
 
-    it 'wraps each player except the active in a current round player presenter' do
-      expect(presenter.players.drop(1).to_a).to all have_attributes(:class => CurrentRoundPlayerPresenter)
+    context 'when the round is still playable' do
+      it 'wraps each player except the active in a current round player presenter' do
+        expect(presenter.players.drop(1).to_a).to all have_attributes(:class => CurrentRoundPlayerPresenter)
+      end
+
+      it 'wraps the active player in a current round active player presenter' do
+        expect(presenter.players[0]).to have_attributes(:class => CurrentRoundActivePlayerPresenter)
+      end
     end
 
-    it 'wraps the active player in a current round active player presenter' do
-      expect(presenter.players[0]).to have_attributes(:class => CurrentRoundActivePlayerPresenter)
+    context 'when the round is over' do
+      before do
+        # Play the game until stock is empty
+        until game_engine.stock.empty?
+          game_engine.pick_up_cards
+          game_engine.discard(:card => game_engine.active_player_hand.first)
+        end
+      end
+
+      it 'wraps all players in a current round player presenter' do
+        expect(presenter.players.to_a).to all have_attributes(:class => CurrentRoundPlayerPresenter)
+      end
     end
   end
 
@@ -64,6 +80,12 @@ describe CurrentRoundPresenter do
   describe '#stock_size' do
     it 'returns the number of cards in the stock' do
       expect(presenter.stock_size).to eq 77
+    end
+  end
+
+  describe '#round_over?' do
+    it 'returns the round over flag from game state' do
+      expect(presenter.round_over?).to eq game_engine.round_over?
     end
   end
 end

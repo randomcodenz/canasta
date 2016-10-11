@@ -26,3 +26,8 @@ end
 Then(/^I should see the stock contains (\d+) (card|cards)$/) do |number_of_cards, card_or_cards|
   expect(find('#stock').text).to include "(#{number_of_cards} #{card_or_cards})"
 end
+
+Then(/^I can see the round is over$/) do
+  expect(page).to have_css('#round_over')
+  expect(page).to have_css('form#start_round')
+end

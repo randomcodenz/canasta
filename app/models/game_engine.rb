@@ -1,6 +1,10 @@
 class GameEngine
   attr_reader :errors, :players, :discard_pile, :stock
 
+  def round_over?
+    active_player_picked_up? ? false : stock_empty?
+  end
+
   def number_of_players
     players.size if players
   end
@@ -61,6 +65,7 @@ class GameEngine
     assert_round_started
     assert_round_dealt
     @errors << 'Player has already picked up' if active_player_picked_up?
+    assert_round_in_progress
 
     no_errors?
   end
@@ -144,6 +149,10 @@ class GameEngine
     stock && stock.any?
   end
 
+  def stock_empty?
+    stock && stock.empty?
+  end
+
   def active_player_picked_up?
     active_player ? active_player.picked_up : false
   end
@@ -186,5 +195,9 @@ class GameEngine
   def assert_current_player_hand_contains_all_cards(cards)
     cards ||= []
     cards.each { |card| assert_current_player_hand_contains_card(card) }
+  end
+
+  def assert_round_in_progress
+    @errors << 'Round has ended' if round_over?
   end
 end

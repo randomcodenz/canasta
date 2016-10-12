@@ -19,17 +19,4 @@ shared_examples 'a playable object' do
     playable_actions = playable.playable_actions
     expect(playable_actions).to all be_a PlayableAction
   end
-
-  it 'root playables do not have a parent playable' do
-    expect(playable.parent_playable).to be_nil if playable.root_playable?
-  end
-
-  describe '#accept' do
-    let(:visitor) { double('Visitor', :visit => true) }
-
-    it 'calls visit on the visitor passing self' do
-      playable.accept(:playable_visitor => visitor)
-      expect(visitor).to have_received(:visit).with(playable)
-    end
-  end
 end

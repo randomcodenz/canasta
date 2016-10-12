@@ -1,14 +1,14 @@
 class ReplayRound
-  attr_reader :round, :game_engine
+  attr_reader :round
 
   def initialize(round:)
     @round = round
   end
 
   def call
-    @game_engine = GameEngine.new
-    replay_round = PlayableVisitors::ReplayRound.new(:game_engine => game_engine)
-    round.accept(:playable_visitor => replay_round)
-    game_engine
+    event_stream = PlayableActionEnumerable.new(:round => round)
+    GameEngine.new.tap do |game_engine|
+      event_stream.each { |event| event.apply_to(:game_engine => game_engine) }
+    end
   end
 end

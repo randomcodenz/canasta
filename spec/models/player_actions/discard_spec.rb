@@ -30,12 +30,6 @@ module PlayerActions
     end
 
     describe 'playable implementation' do
-      describe '#parent_playable' do
-        it 'returns the round' do
-          expect(discard.parent_playable).to eq round
-        end
-      end
-
       describe '#playable_action' do
         it 'returns a discard playable action' do
           expect(discard.playable_action).to be_a(PlayableActions::Discard)

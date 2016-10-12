@@ -25,12 +25,6 @@ module PlayerActions
     end
 
     describe 'playable implementation' do
-      describe '#parent_playable' do
-        it 'returns the round' do
-          expect(pick_up_cards.parent_playable).to eq round
-        end
-      end
-
       describe '#playable_action' do
         it 'returns a pick up cards playable action' do
           expect(pick_up_cards.playable_action).to be_a(PlayableActions::PickUpCards)

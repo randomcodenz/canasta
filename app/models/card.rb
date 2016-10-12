@@ -6,13 +6,34 @@ class Card
   ].freeze
   JOKER = :joker
   NO_SUIT = :none
+  WILD_RANKS = [:joker, :two].freeze
 
   include Comparable
   attr_reader :suit, :rank
 
   def initialize(rank:, suit: NO_SUIT)
+    raise ArgumentError, "#{rank} is not a valid rank" unless valid_rank?(rank)
+    raise ArgumentError, "#{suit} is not a valid suit" unless valid_suit?(suit)
+
     @rank = rank
     @suit = suit
+  end
+
+  def wild?
+    WILD_RANKS.include?(rank)
+  end
+
+  def natural?
+    !wild?
+  end
+
+  def points
+    case rank
+    when :joker then 50
+    when :ace, :two then 20
+    when :king, :queen, :jack, :ten, :nine, :eight then 10
+    else 5
+    end
   end
 
   def <=>(other)
@@ -55,6 +76,14 @@ class Card
   end
 
   private
+
+  def valid_rank?(rank)
+    rank == JOKER || RANKS.include?(rank)
+  end
+
+  def valid_suit?(suit)
+    suit == NO_SUIT || SUITS.include?(suit)
+  end
 
   def compare_identical(other)
     0 if identical?(other)

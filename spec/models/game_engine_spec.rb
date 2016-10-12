@@ -598,7 +598,7 @@ describe GameEngine do
 
       it 'creates a new player meld' do
         game_engine.meld(:cards => cards_to_meld)
-        expect(game_engine.active_player_melds.first).to match cards_to_meld
+        expect(game_engine.active_player_melds.first.cards).to match cards_to_meld
       end
 
       it_behaves_like 'a valid operation', :meld do

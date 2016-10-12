@@ -117,7 +117,7 @@ class GameEngine
         meld << remove_card_from_active_player_hand!(card)
       end
 
-      active_player_melds << meld_cards
+      active_player_melds << Meld.new(:cards => meld_cards)
     end
 
     no_errors?

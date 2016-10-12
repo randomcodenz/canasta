@@ -4,7 +4,7 @@
     <% melds.each do |meld| %>
       <div class="meld">
         <ul class="meld_cards">
-          <% meld.each do |card| %>
+          <% meld.cards.each do |card| %>
             <li><%= card %></li>
           <% end %>
         </ul>

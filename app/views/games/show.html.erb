@@ -1,2 +1,2 @@
 <%= render @game.players %>
-<%= render 'start_round_form' if @game.round_over? %>
+<%= render :partial => 'start_round_form', :locals => { :game => @game } if @game.round_over? %>

@@ -33,3 +33,8 @@ Then(/^I can see the new meld of "([^"]*)"$/) do |meld_rank|
   meld_cards = find_all('.meld_cards').first
   expect(meld_cards.text).to have_content(meld_rank.singularize)
 end
+
+Then(/^I can see each players score$/) do
+  player_scores = find_all('.player_score')
+  expect(player_scores.size).to eq Game.last.players.size
+end

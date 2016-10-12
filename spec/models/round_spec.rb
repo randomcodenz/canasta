@@ -23,28 +23,6 @@ describe Round, :type => :model do
   end
 
   describe 'playable implementation' do
-    describe '#parent_playable' do
-      it 'returns the game' do
-        expect(round.parent_playable).to eq game
-      end
-    end
-
-    describe '#child_playables' do
-      context 'when the round has player actions' do
-        before { round.player_actions << PlayerActions::PickUpCards.new }
-
-        it 'returns the player actions' do
-          expect(round.child_playables).to contain_exactly(*round.player_actions)
-        end
-      end
-
-      context 'when the round has no player actions' do
-        it 'returns an empty array' do
-          expect(round.child_playables).to be_empty
-        end
-      end
-    end
-
     describe '#playable_action' do
       it 'returns a deal round playable action' do
         expect(round.playable_action).to be_a(PlayableActions::DealRound)

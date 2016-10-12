@@ -18,7 +18,7 @@ module PlayableActions
       )
     end
 
-    subject(:playable_action) { Meld.new(:meld_cards => cards_to_meld) }
+    subject(:playable_action) { PlayableActions::Meld.new(:meld_cards => cards_to_meld) }
 
     describe '#apply_to' do
       before { playable_action.apply_to(:game_engine => game_engine) }

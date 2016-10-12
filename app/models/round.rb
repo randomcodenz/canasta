@@ -9,14 +9,6 @@ class Round < ActiveRecord::Base
     includes(:game => :players)
   end
 
-  def parent_playable
-    game
-  end
-
-  def child_playables
-    player_actions.to_a
-  end
-
   def playable_action
     PlayableActions::DealRound.new(:deck_seed => deck_seed)
   end

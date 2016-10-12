@@ -23,34 +23,6 @@ describe Game, :type => :model do
   end
 
   describe 'playable implementation' do
-    describe '#parent_playable' do
-      it 'does not have a parent' do
-        expect(game.parent_playable).to be_nil
-      end
-    end
-
-    describe '#root_playable?' do
-      it 'is a root playable' do
-        expect(game.root_playable?).to be true
-      end
-    end
-
-    describe '#child_playables' do
-      context 'when the game has a current round' do
-        before { game.rounds.new(:deck_seed => 959) }
-
-        it 'returns the current round' do
-          expect(game.child_playables).to contain_exactly(game.current_round)
-        end
-      end
-
-      context 'when the game has no current round' do
-        it 'returns an empty array' do
-          expect(game.child_playables).to be_empty
-        end
-      end
-    end
-
     describe '#playable_action' do
       it 'returns a start round playable action' do
         expect(game.playable_action).to be_a(PlayableActions::StartRound)

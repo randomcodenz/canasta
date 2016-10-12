@@ -15,3 +15,9 @@ Feature: End round
     And I am viewing the round
     When I discard the first card
     Then I can see the round is over
+
+  Scenario: Display each players score when the round is over
+    Given I have started a game with 2 players
+    And The round is over
+    When I view the round
+    Then I can see each players score

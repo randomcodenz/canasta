@@ -141,4 +141,66 @@ describe Card do
       end
     end
   end
+
+  describe '#points' do
+    let(:twenty_point_ranks) { [:ace, :two] }
+    let(:ten_point_ranks) { [:king, :queen, :jack, :ten, :nine, :eight] }
+    let(:five_point_ranks) { [:seven, :six, :five, :four, :three] }
+
+    it 'jokers are worth 50 points' do
+      joker = Card.new(:rank => :joker)
+      expect(joker.points).to eq 50
+    end
+
+    it 'ace and two are worth 20 points each' do
+      twenty_point_cards = twenty_point_ranks.map { |rank| Card.new(:rank => rank, :suit => :diamonds) }
+      expect(twenty_point_cards.map(&:points)).to all eq 20
+    end
+
+    it 'king - eight are worth 10 points each' do
+      ten_point_cards = ten_point_ranks.map { |rank| Card.new(:rank => rank, :suit => :hearts) }
+      expect(ten_point_cards.map(&:points)).to all eq 10
+    end
+
+    it 'seven - three are worth 5 points each' do
+      five_point_cards = five_point_ranks.map { |rank| Card.new(:rank => rank, :suit => :clubs) }
+      expect(five_point_cards.map(&:points)).to all eq 5
+    end
+  end
+
+  describe '#wild?' do
+    it 'jokers are wild cards' do
+      joker = Card.new(:rank => :joker)
+      expect(joker.wild?).to be true
+    end
+
+    it 'twos are wild cards' do
+      two = Card.new(:rank => :two, :suit => :clubs)
+      expect(two.wild?).to be true
+    end
+
+    it 'no other ranks are wild' do
+      non_wild_ranks = Card::RANKS - [:joker, :two]
+      non_wild_cards = non_wild_ranks.map { |rank| Card.new(:rank => rank, :suit => :spades) }
+      expect(non_wild_cards.map(&:wild?)).to all be false
+    end
+  end
+
+  describe '#natural?' do
+    it 'all ranks except wild cards are natural' do
+      non_wild_ranks = Card::RANKS - [:joker, :two]
+      non_wild_cards = non_wild_ranks.map { |rank| Card.new(:rank => rank, :suit => :hearts) }
+      expect(non_wild_cards.map(&:natural?)).to all be true
+    end
+
+    it 'jokers are not natural' do
+      joker = Card.new(:rank => :joker)
+      expect(joker.natural?).to be false
+    end
+
+    it 'twos are not natural' do
+      two = Card.new(:rank => :two, :suit => :diamonds)
+      expect(two.natural?).to be false
+    end
+  end
 end

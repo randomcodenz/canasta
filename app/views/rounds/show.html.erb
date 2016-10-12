@@ -2,7 +2,7 @@
   Round <%= @round.current_round_number %>
   <%= render :partial => 'round_over', :locals => { :round => @round } if @round.round_over? %>
 </p>
-<%= render :partial => @round.players, :as => 'player' %>
+<%= render :partial => @round.players, :as => 'player', :locals => { :round_over => @round.round_over? } %>
 <p id="stock">
   Stock: (<%= describe_pile_size @round.stock_size %>)
 </p>

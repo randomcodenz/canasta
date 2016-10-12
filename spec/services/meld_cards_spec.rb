@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Meld do
+describe MeldCards do
   subject(:game) do
     Game.create! do |game|
       game.players.new([{ :name => 'Player 1' }, { :name => 'Player 2' }])
@@ -11,7 +11,7 @@ describe Meld do
   let(:card_names) { ['Joker', 'Ten of Spades', 'Ten of Diamonds'] }
   let(:cards_to_meld) { card_names.map { |card_name| Card.from_s(:card_name => card_name) } }
 
-  subject(:service) { Meld.new(:round => round, :card_names => card_names) }
+  subject(:service) { MeldCards.new(:round => round, :card_names => card_names) }
 
   context 'when melding is a valid action' do
     before { round.player_actions << PlayerActions::PickUpCards.new }

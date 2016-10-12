@@ -1,4 +1,4 @@
-class Meld
+class MeldCards
   attr_reader :round, :card_names, :errors
 
   def initialize(round:, card_names:)

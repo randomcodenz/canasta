@@ -31,3 +31,10 @@ Given(/^I have picked up the last cards from stock$/) do
     round.player_actions << PlayerActions::PickUpCards.new
   end
 end
+
+Given(/^The round is over$/) do
+  step 'I have started a round'
+  step 'I have picked up the last cards from stock'
+  step 'I view the round'
+  step 'I discard the first card'
+end

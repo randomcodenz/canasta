@@ -1,5 +1,6 @@
 <div class="player">
   <%= player.name %> (<%= describe_pile_size player.hand_size %>)
+  <%= render :partial => 'score', :locals => { :player => player } if round_over %>
   <ul class="cards">
     <% player.hand.each do |card| %>
       <li class="card"><%= card %></li>

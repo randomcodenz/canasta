@@ -18,6 +18,6 @@ class PlayerContext
   end
 
   def meld_points
-    melds.map(&:points).reduce(:+)
+    melds.map(&:points).reduce(:+) || 0
   end
 end

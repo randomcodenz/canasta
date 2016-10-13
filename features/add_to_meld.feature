@@ -5,6 +5,7 @@ Feature: Add to existing meld
 
   Scenario: Add natural card to existing meld
     Given I am playing a round with 2 players
+    And I have picked up 2 cards from stock
     And I have melded "King of Hearts, King of Diamonds and Two of Clubs"
     And I am viewing the round
     When I add "King of Clubs" to the meld

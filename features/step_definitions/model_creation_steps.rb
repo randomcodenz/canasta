@@ -42,9 +42,10 @@ end
 Given(/^I am playing a round with (\d+) players$/) do |player_count|
   step "I have started a game with #{player_count} players"
   step 'I have started a round'
+  step 'I am viewing the round'
 end
 
 Given(/^I have melded "([^"]*)"$/) do |meld_cards|
-  card_names = meld_cards.split(/\W+/)
+  card_names = meld_cards.split(/, | and /)
   MeldCards.new(:round => Round.last, :card_names => card_names).call
 end

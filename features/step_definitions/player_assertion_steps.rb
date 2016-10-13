@@ -38,3 +38,8 @@ Then(/^I can see each players score$/) do
   player_scores = find_all('.player_score')
   expect(player_scores.size).to eq Game.last.players.size
 end
+
+Then(/^I can see "([^"]*)" in the meld$/) do |card_name|
+  meld_cards = find_all('.meld_cards').first
+  expect(meld_cards.text).to have_content(card_name)
+end

@@ -61,6 +61,7 @@ describe GameEngine do
   let(:player_picked_up) { 'Player has already picked up' }
   let(:player_not_picked_up) { 'Player has not picked up' }
   let(:hand_missing_card) { "Hand does not include #{card_not_held}" }
+  let(:player_missing_meld) { "Player does not have a meld of rank #{card_to_add_to_meld.rank}" }
   let(:round_ended) { 'Round has ended' }
   let(:player_names) { ['Player 1', 'Player 2'] }
   let(:number_of_players) { player_names.size }
@@ -603,6 +604,176 @@ describe GameEngine do
 
       it_behaves_like 'a valid operation', :meld do
         let(:method_keyword_args) { { :cards => cards_to_meld } }
+      end
+    end
+  end
+
+  describe '#can_add_to_meld?' do
+    context 'when the round has not been started' do
+      it_behaves_like 'an invalid operation', :can_add_to_meld? do
+        let(:expected_errors) { [round_not_started, round_not_dealt, player_not_picked_up] }
+      end
+    end
+
+    context 'when the round has not been dealt' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+      end
+
+      it_behaves_like 'an invalid operation', :can_add_to_meld? do
+        let(:expected_errors) { [round_not_dealt, player_not_picked_up] }
+      end
+    end
+
+    context 'when the current player has not picked up' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+      end
+
+      it_behaves_like 'an invalid operation', :can_add_to_meld? do
+        let(:expected_errors) { [player_not_picked_up] }
+      end
+    end
+
+    context 'when the current player has picked up' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+      end
+
+      it_behaves_like 'a valid operation', :can_add_to_meld?
+    end
+
+    context 'when the current players hand does not include the card' do
+      let(:card_to_add_to_meld) { Card.new(:rank => :seven, :suit => :spades) }
+      let(:card_not_held) { card_to_add_to_meld }
+
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+      end
+
+      it_behaves_like 'an invalid operation', :can_add_to_meld? do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+        let(:expected_errors) { [hand_missing_card] }
+      end
+    end
+
+    context 'when the current player does not have a meld with correct rank' do
+      let(:card_to_add_to_meld) { Card.new(:rank => :ten, :suit => :spades) }
+
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+      end
+
+      it_behaves_like 'an invalid operation', :can_add_to_meld? do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+        let(:expected_errors) { [player_missing_meld] }
+      end
+    end
+
+    context 'when the player has card in hand and has a meld with the correct rank' do
+      let(:card_to_add_to_meld) { Card.new(:rank => :ten, :suit => :spades) }
+
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+        game_engine.active_player_melds << Meld.new(:cards => Array.new(2, Card.new(:rank => :ten, :suit => :spades)))
+      end
+
+      it_behaves_like 'a valid operation', :can_add_to_meld? do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+      end
+    end
+  end
+
+  describe '#add_to_meld' do
+    let(:card_to_add_to_meld) { Card.new(:rank => :ten, :suit => :hearts) }
+
+    context 'when the round has not been started' do
+      it_behaves_like 'an invalid operation', :add_to_meld do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+        let(:expected_errors) { [round_not_started, round_not_dealt, player_not_picked_up] }
+      end
+    end
+
+    context 'when the round has not been dealt' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+      end
+
+      it_behaves_like 'an invalid operation', :add_to_meld do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+        let(:expected_errors) { [round_not_dealt, player_not_picked_up] }
+      end
+    end
+
+    context 'when the active player has not picked up' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+      end
+
+      it_behaves_like 'an invalid operation', :add_to_meld do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+        let(:expected_errors) { [player_not_picked_up] }
+      end
+    end
+
+    context 'when the current players hand does not include the card' do
+      let(:card_to_add_to_meld) { Card.new(:rank => :seven, :suit => :spades) }
+      let(:card_not_held) { card_to_add_to_meld }
+
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+      end
+
+      it_behaves_like 'an invalid operation', :add_to_meld do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+        let(:expected_errors) { [hand_missing_card] }
+      end
+    end
+
+    context 'when the active player has no matching meld' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+      end
+
+      it_behaves_like 'an invalid operation', :add_to_meld do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
+        let(:expected_errors) { [player_missing_meld] }
+      end
+    end
+
+    context 'when the active player has matching meld' do
+      before do
+        game_engine.start_round(:player_names => player_names)
+        game_engine.deal(:dealer => dealer)
+        game_engine.pick_up_cards
+        game_engine.active_player_melds << Meld.new(:cards => Array.new(2, Card.new(:rank => :ten, :suit => :spades)))
+      end
+
+      it 'removes the cards from the active players hand' do
+        expect { game_engine.add_to_meld(:card => card_to_add_to_meld) }.to change { game_engine.active_player_hand.count(card_to_add_to_meld) }.by(-1)
+      end
+
+      it 'adds the cards to the matching meld' do
+        game_engine.add_to_meld(:card => card_to_add_to_meld)
+        expect(game_engine.active_player_melds.first.cards).to include card_to_add_to_meld
+      end
+
+      it_behaves_like 'a valid operation', :add_to_meld do
+        let(:method_keyword_args) { { :card => card_to_add_to_meld } }
       end
     end
   end

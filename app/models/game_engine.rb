@@ -123,6 +123,28 @@ class GameEngine
     no_errors?
   end
 
+  def can_add_to_meld?(card: nil)
+    @errors = []
+
+    assert_round_started
+    assert_round_dealt
+    assert_player_picked_up
+    assert_current_player_hand_contains_all_cards([card]) unless errors.any?
+    @errors << "Adding wild cards to meld is not supported yet" if !errors.any? && card && card.wild?
+    @errors << "Player does not have a meld of rank #{card.rank}" if !errors.any? && card && !active_player_meld_with_rank(card.rank)
+
+    no_errors?
+  end
+
+  def add_to_meld(card:)
+    if can_add_to_meld?(:card => card)
+      meld = active_player_meld_with_rank(card.rank)
+      meld.cards << remove_card_from_active_player_hand!(card)
+    end
+
+    no_errors?
+  end
+
   private
 
   def round_started?
@@ -199,5 +221,13 @@ class GameEngine
 
   def assert_round_in_progress
     @errors << 'Round has ended' if round_over?
+  end
+
+  def active_player_meld_with_rank(rank)
+    if active_player_melds
+      active_player_melds.select do |meld|
+        meld.rank == rank
+      end.first
+    end
   end
 end

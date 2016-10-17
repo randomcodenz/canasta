@@ -9,7 +9,7 @@ describe MeldCardsController, :type => :controller do
   end
   let(:round) { game.rounds.last }
   let(:round_id) { round.id }
-  let(:selected_cards) { ['Joker', 'Ten of Diamonds', 'Ten of Hearts'] }
+  let(:selected_cards) { ['Ten of Spades', 'Ten of Diamonds', 'Ten of Hearts'] }
   let(:params) { { :round_id => round_id, :player_action => { :selected_cards => selected_cards } } }
 
   describe 'POST #create' do

@@ -22,7 +22,10 @@
     <ul>
       <li><%= f.submit('Pick up cards', :id => 'pick_up_cards_button', :formaction => round_pick_up_cards_path(player.round)) %></li>
       <li><%= f.submit('Meld cards', :id => 'meld_cards_button', :formaction => round_meld_cards_path(player.round)) %></li>
-      <li><%= f.submit('Add to meld', :id => 'add_to_meld_button', :formaction => round_add_to_meld_path(player.round)) %></li>
+      <li>
+        <%= f.select(:selected_meld, player.melds_for_add_to_select) %>
+        <%= f.submit('Add to meld', :id => 'add_to_meld_button', :formaction => round_add_to_meld_path(player.round)) %>
+      </li>
       <li><%= f.submit('Discard', :id => 'discard_button', :formaction => round_discards_path(player.round)) %></li>
     </ul>
   <% end %>

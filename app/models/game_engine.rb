@@ -107,6 +107,8 @@ class GameEngine
     assert_round_dealt
     assert_player_picked_up
     assert_current_player_hand_contains_all_cards(cards) unless errors.any?
+    assert_meld_big_enough(cards) if cards && !errors.any?
+    assert_cards_of_the_same_rank(cards) if cards && !errors.any?
 
     no_errors?
   end
@@ -123,22 +125,22 @@ class GameEngine
     no_errors?
   end
 
-  def can_add_to_meld?(card: nil)
+  def can_add_to_meld?(meld_rank: nil, card: nil)
     @errors = []
 
     assert_round_started
     assert_round_dealt
     assert_player_picked_up
     assert_current_player_hand_contains_all_cards([card]) unless errors.any?
-    @errors << "Adding wild cards to meld is not supported yet" if !errors.any? && card && card.wild?
-    @errors << "Player does not have a meld of rank #{card.rank}" if !errors.any? && card && !active_player_meld_with_rank(card.rank)
+    @errors << "Player does not have a meld of rank #{meld_rank}" if !errors.any? && meld_rank && !active_player_meld_with_rank(meld_rank)
+    @errors << "Meld's rank differs from card's rank" if !errors.any? && card && card.natural? && meld_rank != card.rank
 
     no_errors?
   end
 
-  def add_to_meld(card:)
-    if can_add_to_meld?(:card => card)
-      meld = active_player_meld_with_rank(card.rank)
+  def add_to_meld(meld_rank:, card:)
+    if can_add_to_meld?(:meld_rank => meld_rank, :card => card)
+      meld = active_player_meld_with_rank(meld_rank)
       meld.cards << remove_card_from_active_player_hand!(card)
     end
 
@@ -221,6 +223,14 @@ class GameEngine
 
   def assert_round_in_progress
     @errors << 'Round has ended' if round_over?
+  end
+
+  def assert_meld_big_enough(cards)
+    @errors << "A meld must consist of three cards minimum" if cards && cards.size < 3
+  end
+
+  def assert_cards_of_the_same_rank(cards)
+    @errors << "Cards in meld must be of the same rank" if cards.select(&:natural?).map(&:rank).uniq.size > 1
   end
 
   def active_player_meld_with_rank(rank)

@@ -7,7 +7,7 @@ module PlayerActions
 
     def playable_actions
       cards_to_add = cards.map(&:to_card)
-      cards_to_add.map { |card| PlayableActions::AddToMeld.new(:card => card) }
+      cards_to_add.map { |card| PlayableActions::AddToMeld.new(:meld_rank => target_meld_rank.to_sym, :card => card) }
     end
   end
 end

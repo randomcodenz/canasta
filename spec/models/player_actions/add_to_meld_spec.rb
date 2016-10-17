@@ -10,6 +10,7 @@ module PlayerActions
         Card.new(:rank => :joker)
       ]
     end
+    let(:target_meld_rank) { cards_to_meld[0].rank }
     let(:meld_cards) { cards_to_meld.map { |card_to_meld| PlayerActionCard.from_card(:card => card_to_meld) } }
     let(:cards_to_add_to_meld) do
       [
@@ -31,6 +32,7 @@ module PlayerActions
 
           add_to_meld = AddToMeld.new do |new_add_to_meld|
             new_add_to_meld.cards << added_cards
+            new_add_to_meld.target_meld_rank = target_meld_rank
           end
           round.player_actions << add_to_meld
         end

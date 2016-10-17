@@ -3,7 +3,7 @@
     <b><%= player_name %> Melds</b>
     <% melds.each do |meld| %>
       <div class="meld">
-        <ul class="meld_cards">
+        <ul class="meld_cards <%= meld.rank %>">
           <% meld.cards.each do |card| %>
             <li><%= card %></li>
           <% end %>

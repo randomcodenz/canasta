@@ -4,7 +4,8 @@ describe AddToMeldsController, :type => :controller do
   let(:cards_in_meld) do
     [
       PlayerActionCard.from_card(:card => Card.new(:rank => :ten, :suit => :spades)),
-      PlayerActionCard.from_card(:card => Card.new(:rank => :ten, :suit => :diamonds))
+      PlayerActionCard.from_card(:card => Card.new(:rank => :ten, :suit => :diamonds)),
+      PlayerActionCard.from_card(:card => Card.new(:rank => :ten, :suit => :hearts))
     ]
   end
   let(:game) do
@@ -17,8 +18,14 @@ describe AddToMeldsController, :type => :controller do
   end
   let(:round) { game.rounds.last }
   let(:round_id) { round.id }
-  let(:selected_cards) { ['Ten of Diamonds', 'Ten of Hearts'] }
-  let(:params) { { :round_id => round_id, :player_action => { :selected_cards => selected_cards } } }
+  let(:selected_cards) { ['Ten of Diamonds'] }
+  let(:selected_meld) { cards_in_meld[0].rank }
+  let(:params) do
+    {
+      :round_id => round_id,
+      :player_action => { :selected_cards => selected_cards, :selected_meld => selected_meld }
+    }
+  end
 
   describe 'POST #create' do
     context 'when adding cards to a meld is a valid player action' do

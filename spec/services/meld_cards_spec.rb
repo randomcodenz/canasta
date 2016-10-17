@@ -8,7 +8,7 @@ describe MeldCards do
     end
   end
   let(:round) { game.rounds.last }
-  let(:card_names) { ['Joker', 'Ten of Spades', 'Ten of Diamonds'] }
+  let(:card_names) { ['Ten of Hearts', 'Ten of Spades', 'Ten of Diamonds'] }
   let(:cards_to_meld) { card_names.map { |card_name| Card.from_s(:card_name => card_name) } }
 
   subject(:service) { MeldCards.new(:round => round, :card_names => card_names) }

@@ -44,14 +44,16 @@ When(/^I meld "([^"]*)", "([^"]*)", "([^"]*)"$/) do |card1, card2, card3|
   end
 end
 
-When(/^I add "([^*]*)" to the "([^"]*)" meld$/) do |card_name, meld_name|
+When(/^I add "([^*]*) and ([^*]*)" to the "([^"]*)" meld$/) do |card_one, card_two, meld_name|
   within('form#player_actions') do
-    card = find_all('.card')
-             .select { |card_element| card_element.has_content?(card_name) }
-             .first
+    [card_one, card_two].each do |card_name|
+      card = find_all('.card')
+               .select { |card_element| card_element.has_content?(card_name) }
+               .first
 
-    card_id = card.find_field('player_action[selected_cards][]')[:id]
-    check(card_id)
+      card_id = card.find_field('player_action[selected_cards][]')[:id]
+      check(card_id)
+    end
 
     select(meld_name)
     click_button('Add to meld')

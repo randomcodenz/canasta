@@ -58,20 +58,8 @@ module PlayerActions
 
     describe 'playable implementation' do
       describe '#playable_action' do
-        it 'returns an enum of add to meld playable actions' do
-          add_to_meld.playable_actions.each do |action|
-            expect(action).to be_a(PlayableActions::AddToMeld)
-          end
-        end
-
-        it 'returns one add to meld playable action for each card' do
-          expect(add_to_meld.playable_actions.size).to eq added_cards.size
-        end
-
-        it 'passes each of the cards to one add to meld playable action' do
-          added_cards.each do |added_card|
-            expect(add_to_meld.playable_actions.map(&:card)).to include(added_card)
-          end
+        it 'returns an add to meld playable action' do
+          expect(add_to_meld.playable_action).to be_a(PlayableActions::AddToMeld)
         end
       end
     end

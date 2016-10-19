@@ -5,9 +5,9 @@ module PlayerActions
       :class_name => :PlayerActionCard,
       :foreign_key => 'player_action_id'
 
-    def playable_actions
+    def playable_action
       cards_to_add = cards.map(&:to_card)
-      cards_to_add.map { |card| PlayableActions::AddToMeld.new(:meld_rank => target_meld_rank.to_sym, :card => card) }
+      PlayableActions::AddToMeld.new(:meld_rank => target_meld_rank.to_sym, :cards => cards_to_add)
     end
   end
 end

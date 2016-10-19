@@ -61,10 +61,12 @@ describe GameEngine do
   let(:player_picked_up) { 'Player has already picked up' }
   let(:player_not_picked_up) { 'Player has not picked up' }
   let(:hand_missing_card) { "Hand does not include #{card_not_held}" }
-  let(:player_missing_meld) { "Player does not have a meld of rank #{card_to_add_to_meld.rank}" }
-  let(:ranks_differ) { "Meld's rank differs from card's rank" }
+  let(:player_missing_meld) { "Player does not have a meld of rank #{cards_to_add_to_meld.first.rank}" }
+  let(:ranks_differ) { "Cards in meld must be of the same rank" }
   let(:meld_too_small) { "A meld must consist of three cards minimum" }
   let(:cards_with_different_ranks) { "Cards in meld must be of the same rank" }
+  let(:too_many_wild_cards) { "A meld must contain three wild cards maximum" }
+  let(:not_enough_natural_cards) { "A meld must contain more natural cards than wild" }
   let(:round_ended) { 'Round has ended' }
   let(:player_names) { ['Player 1', 'Player 2'] }
   let(:number_of_players) { player_names.size }
@@ -547,18 +549,57 @@ describe GameEngine do
       end
 
       context 'when the cards to meld contain wild cards' do
-      let(:cards_to_meld) do
-        [
-          Card.new(:rank => :ten, :suit => :spades),
-          Card.new(:rank => :ten, :suit => :hearts),
-          Card.new(:rank => :joker)
-        ]
+        let(:cards_to_meld) do
+          [
+            Card.new(:rank => :ten, :suit => :spades),
+            Card.new(:rank => :ten, :suit => :hearts),
+            Card.new(:rank => :joker)
+          ]
+        end
+
+        it_behaves_like 'a valid operation', :can_meld? do
+          let(:method_keyword_args) { { :cards => cards_to_meld } }
+        end
       end
 
-      it_behaves_like 'a valid operation', :can_meld? do
-        let(:method_keyword_args) { { :cards => cards_to_meld } }
+      context 'when the cards to meld contain more than three wild cards' do
+        let(:cards_to_meld) do
+          [
+            Card.new(:rank => :ten, :suit => :spades),
+            Card.new(:rank => :ten, :suit => :hearts),
+            Card.new(:rank => :joker),
+            Card.new(:rank => :joker),
+            Card.new(:rank => :joker),
+            Card.new(:rank => :joker)
+          ]
+        end
+
+        it_behaves_like 'an invalid operation', :can_meld? do
+          let(:method_keyword_args) { { :cards => cards_to_meld } }
+          let(:expected_errors) do
+            [not_enough_natural_cards, too_many_wild_cards]
+          end
+        end
       end
-    end
+
+      context 'when the cards to meld do not contain at least one more natural card than wild' do
+        let(:cards_to_meld) do
+          [
+            Card.new(:rank => :ten, :suit => :spades),
+            Card.new(:rank => :ten, :suit => :hearts),
+            Card.new(:rank => :joker),
+            Card.new(:rank => :joker),
+            Card.new(:rank => :joker)
+          ]
+        end
+
+        it_behaves_like 'an invalid operation', :can_meld? do
+          let(:method_keyword_args) { { :cards => cards_to_meld } }
+          let(:expected_errors) do
+            [not_enough_natural_cards]
+          end
+        end
+      end
     end
   end
 
@@ -665,22 +706,22 @@ describe GameEngine do
       it_behaves_like 'a valid operation', :can_add_to_meld?
 
       context 'when the current players hand does not include the card' do
-        let(:card_to_add_to_meld) { Card.new(:rank => :seven, :suit => :spades) }
-        let(:card_not_held) { card_to_add_to_meld }
-        let(:non_existent_meld_rank) { card_to_add_to_meld.rank }
+        let(:cards_to_add_to_meld) { [Card.new(:rank => :seven, :suit => :spades)] }
+        let(:card_not_held) { cards_to_add_to_meld.first }
+        let(:non_existent_meld_rank) { cards_to_add_to_meld.first.rank }
 
         it_behaves_like 'an invalid operation', :can_add_to_meld? do
-          let(:method_keyword_args) { { :meld_rank => non_existent_meld_rank, :card => card_to_add_to_meld } }
+          let(:method_keyword_args) { { :meld_rank => non_existent_meld_rank, :cards => cards_to_add_to_meld } }
           let(:expected_errors) { [hand_missing_card] }
         end
       end
 
       context 'when the current player has no matching rank' do
-        let(:card_to_add_to_meld) { Card.new(:rank => :ten, :suit => :spades) }
-        let(:non_existent_meld_rank) { card_to_add_to_meld.rank }
+        let(:cards_to_add_to_meld) { [Card.new(:rank => :ten, :suit => :spades)] }
+        let(:non_existent_meld_rank) { cards_to_add_to_meld.first.rank }
 
         it_behaves_like 'an invalid operation', :can_add_to_meld? do
-          let(:method_keyword_args) { { :meld_rank => non_existent_meld_rank, :card => card_to_add_to_meld } }
+          let(:method_keyword_args) { { :meld_rank => non_existent_meld_rank, :cards => cards_to_add_to_meld } }
           let(:expected_errors) { [player_missing_meld] }
         end
       end
@@ -693,27 +734,53 @@ describe GameEngine do
         end
 
         context 'when the target meld rank and card rank do not match' do
-          let(:card_to_add_to_meld) { Card.new(:rank => :jack, :suit => :spades) }
+          let(:cards_to_add_to_meld) { [Card.new(:rank => :jack, :suit => :spades)] }
 
           it_behaves_like 'an invalid operation', :can_add_to_meld? do
-            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :card => card_to_add_to_meld } }
+            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld } }
             let(:expected_errors) { [ranks_differ] }
           end
         end
 
-        context 'when the card is wild' do
-          let(:card_to_add_to_meld) { Card.new(:rank => :joker) }
+        context 'when adding multiple valid cards' do
+          let(:cards_to_add_to_meld) { Array.new(2, Card.new(:rank => existing_meld_rank, :suit => :hearts)) }
 
           it_behaves_like 'a valid operation', :can_add_to_meld? do
-            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :card => card_to_add_to_meld } }
+            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld } }
+          end
+        end
+
+        context 'when adding a wild card' do
+          let(:cards_to_add_to_meld) { [Card.new(:rank => :joker)] }
+
+          it_behaves_like 'a valid operation', :can_add_to_meld? do
+            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld } }
           end
         end
 
         context 'when the card is natural and ranks match' do
-          let(:card_to_add_to_meld) { Card.new(:rank => existing_meld_rank, :suit => :spades) }
+          let(:cards_to_add_to_meld) { [Card.new(:rank => existing_meld_rank, :suit => :spades)] }
 
           it_behaves_like 'a valid operation', :can_add_to_meld? do
-            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :card => card_to_add_to_meld } }
+            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld } }
+          end
+        end
+
+        context 'when there are not more natural cards than wild' do
+          let(:cards_to_add_to_meld) { Array.new(3, Card.new(:rank => :joker)) }
+
+          it_behaves_like 'an invalid operation', :can_add_to_meld? do
+            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld } }
+            let(:expected_errors) { [not_enough_natural_cards] }
+          end
+        end
+
+        context 'when the resulting meld has too many wild cards' do
+          let(:cards_to_add_to_meld) { Array.new(4, Card.new(:rank => :joker)) }
+
+          it_behaves_like 'an invalid operation', :can_add_to_meld? do
+            let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld } }
+            let(:expected_errors) { [not_enough_natural_cards, too_many_wild_cards] }
           end
         end
       end
@@ -723,18 +790,18 @@ describe GameEngine do
   describe '#add_to_meld' do
 
     context 'when the operation is invalid' do
-      let(:card_to_add_to_meld) { Card.new(:rank => :ten, :suit => :hearts) }
-      let(:meld_rank) { card_to_add_to_meld.rank }
+      let(:cards_to_add_to_meld) { [Card.new(:rank => :ten, :suit => :hearts)] }
+      let(:meld_rank) { cards_to_add_to_meld.first.rank }
 
       it_behaves_like 'an invalid operation', :add_to_meld do
-        let(:method_keyword_args) { { :meld_rank => meld_rank, :card => card_to_add_to_meld } }
+        let(:method_keyword_args) { { :meld_rank => meld_rank, :cards => cards_to_add_to_meld } }
         let(:expected_errors) { [round_not_started, round_not_dealt, player_not_picked_up] }
       end
     end
 
     context 'when the operation is valid' do
       let(:existing_meld_rank) { :ten }
-      let(:card_to_add_to_meld) { Card.new(:rank => existing_meld_rank, :suit => :hearts) }
+      let(:cards_to_add_to_meld) { [Card.new(:rank => existing_meld_rank, :suit => :hearts)] }
 
       before do
         game_engine.start_round(:player_names => player_names)
@@ -745,16 +812,17 @@ describe GameEngine do
       end
 
       it_behaves_like 'a valid operation', :add_to_meld do
-        let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :card => card_to_add_to_meld } }
+        let(:method_keyword_args) { { :meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld } }
       end
 
       it 'removes the cards from the active players hand' do
-        expect { game_engine.add_to_meld(:meld_rank => existing_meld_rank, :card => card_to_add_to_meld) }.to change { game_engine.active_player_hand.count(card_to_add_to_meld) }.by(-1)
+        expect { game_engine.add_to_meld(:meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld) }
+        .to change { game_engine.active_player_hand.count }.by(-cards_to_add_to_meld.size)
       end
 
       it 'adds the cards to the matching meld' do
-        game_engine.add_to_meld(:meld_rank => existing_meld_rank, :card => card_to_add_to_meld)
-        expect(game_engine.active_player_melds.first.cards).to include card_to_add_to_meld
+        game_engine.add_to_meld(:meld_rank => existing_meld_rank, :cards => cards_to_add_to_meld)
+        cards_to_add_to_meld.each { |card| expect(game_engine.active_player_melds.first.cards).to include card }
       end
     end
   end

@@ -133,7 +133,7 @@ class GameEngine
     assert_current_player_hand_contains_all_cards(cards) unless errors.any?
 
     meld = active_player_meld_with_rank(meld_rank)
-    @errors << "Player does not have a meld of rank #{meld_rank}" if !errors.any? && cards && !meld
+    @errors << "Player does not have a meld of rank #{meld_rank}" if errors.empty? && cards && meld.nil?
 
     if meld
       meld_to_validate = Meld.new(:cards => meld.cards + cards)

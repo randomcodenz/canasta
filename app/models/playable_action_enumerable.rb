@@ -11,7 +11,7 @@ class PlayableActionEnumerable
     yield round.game.playable_action
     yield round.playable_action
     round.player_actions.each do |player_action|
-      yield player_action.playable_action
+      player_action.playable_actions.each { |action| yield action }
     end
   end
 end

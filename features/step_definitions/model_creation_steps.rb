@@ -5,8 +5,9 @@ Given(/^I have started a game with (\d+) players$/) do |player_count|
   end
 end
 
-Given(/^I have started a round$/) do
-  Game.last.rounds.create!(:deck_seed => 99_235)
+Given(/^I have started a round(?: with seed (\d+))?$/) do |seed|
+  seed ||= 99_235
+  Game.last.rounds.create!(:deck_seed => seed)
 end
 
 Given(/^I have picked up the last cards from stock$/) do
@@ -37,4 +38,15 @@ Given(/^The round is over$/) do
   step 'I have picked up the last cards from stock'
   step 'I view the round'
   step 'I discard the first card'
+end
+
+Given(/^I am playing a round with (\d+) players(?: and seed (\d+))?$/) do |player_count, seed|
+  step "I have started a game with #{player_count} players"
+  seed ? step("I have started a round with seed #{seed}") : step('I have started a round')
+  step 'I am viewing the round'
+end
+
+Given(/^I have melded "([^"]*)"$/) do |meld_cards|
+  card_names = meld_cards.split(/, | and /)
+  MeldCards.new(:round => Round.last, :card_names => card_names).call
 end

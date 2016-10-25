@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161008180242) do
+ActiveRecord::Schema.define(version: 20161018020614) do
 
   create_table "card_ranks", force: :cascade do |t|
     t.string   "rank",       limit: 10, null: false
@@ -47,11 +47,12 @@ ActiveRecord::Schema.define(version: 20161008180242) do
   add_index "player_action_cards", ["player_action_id"], name: "index_player_action_cards_on_player_action_id"
 
   create_table "player_actions", force: :cascade do |t|
-    t.string   "type",       null: false
-    t.integer  "round_id",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "type",             null: false
+    t.integer  "round_id",         null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.string   "card_name"
+    t.string   "target_meld_rank"
   end
 
   add_index "player_actions", ["round_id"], name: "index_player_actions_on_round_id"

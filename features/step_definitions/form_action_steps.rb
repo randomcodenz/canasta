@@ -44,7 +44,7 @@ When(/^I meld "([^"]*)", "([^"]*)", "([^"]*)"$/) do |card1, card2, card3|
   end
 end
 
-When(/^I add "([^*]*) and ([^*]*)" to the "([^"]*)" meld$/) do |card_one, card_two, meld_name|
+When(/^I add "([^"]*) and ([^"]*)" to the "([^"]*)" meld$/) do |card_one, card_two, meld_name|
   within('form#player_actions') do
     [card_one, card_two].each do |card_name|
       card = find_all('.card')
